@@ -1,0 +1,46 @@
+{
+  "name": "ts_test14",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build"
+  },
+  "dependencies": {
+    "@element-plus/icons-vue": "^2.0.4",
+    "@fullcalendar/interaction": "^5.11.0",
+    "@fullcalendar/resource-timeline": "^5.11.0",
+    "@fullcalendar/vue3": "^5.11.1",
+    "@tinymce/tinymce-vue": "^4.0.7",
+    "animate.css": "^4.1.1",
+    "autoprefixer": "10.4.5",
+    "axios": "^0.24.0",
+    "bootstrap": "^5.0.2",
+    "core-js": "^3.8.3",
+    "datatables.net-dt": "^1.1.0",
+    "echarts": "^5.2.2",
+    "element-plus": "^2.2.0",
+    "html2canvas": "^1.3.3",
+    "jquery": "^3.6.0",
+    "jspdf": "^2.4.0",
+    "moment": "^2.29.1",
+    "tinymce": "^5.10.5",
+    "vue": "^3.2.37",
+    "vue-full-calendar": "^2.8.1-0",
+    "vue-router": "^4.0.3",
+    "vue-ueditor-wrap": "^3.0.8",
+    "vuex": "^4.0.0",
+    "vxe-table": "^4.2.7-beta.2",
+    "xe-utils": "^3.5.4"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~5.0.0",
+    "@vue/cli-plugin-router": "~5.0.0",
+    "@vue/cli-plugin-typescript": "~5.0.0",
+    "@vue/cli-plugin-vuex": "~5.0.0",
+    "@vue/cli-service": "~5.0.0",
+    "sass": "^1.32.7",
+    "sass-loader": "^12.0.0",
+    "typescript": "~4.5.5"
+  }
+}

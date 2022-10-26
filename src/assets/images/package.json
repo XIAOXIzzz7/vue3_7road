@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "@fullcalendar/daygrid": "^5.10.1",
+    "@fullcalendar/interaction": "^5.10.1",
+    "@fullcalendar/vue": "^5.10.1",
+    "@fullcalendar/vue3": "^5.10.1",
+    "bootstrap": "^5.0.2",
+    "datatables.net-dt": "^1.1.0",
+    "echarts": "^5.2.2"
+  }
+}
