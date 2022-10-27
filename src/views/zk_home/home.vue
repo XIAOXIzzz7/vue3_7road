@@ -71,6 +71,12 @@
             <router-link v-if="fxshow2==1" to="/qa/issueBug">
                 <el-menu-item index="2-2" class="menuitem"><el-icon><Folder /></el-icon> 发行项目BUG </el-menu-item>
             </router-link>
+            <router-link v-if="fxshow2==1" to="/qa/issuesendemail">
+                <el-menu-item index="2-3" class="menuitem"><el-icon><Folder /></el-icon> 项目邮件发送 </el-menu-item>
+            </router-link>
+            <router-link v-if="fxshow2==1" to="/qa/issueemailconfig">
+                <el-menu-item index="2-4" class="menuitem"><el-icon><Folder /></el-icon> 项目邮件配置 </el-menu-item>
+            </router-link>
         </el-menu-item-group>
       </el-sub-menu>
        <el-sub-menu index="3" v-if="memshow==1">
@@ -178,6 +184,8 @@ export default {
                 "/qa/qa_calendar":"3-1",
                 "/qa/qa_zy":"3-2-1",
                 "/qa/qa_issue":"3-2-2",
+                "/qa/issuesendemail":"2-3",
+                "/qa/issueemailconfig":"2-4",
                 "/qa/qa_zy_bug":"3-3-1",
                 "/qa/qa_bug_issue":"3-3-2",
                 "/qa/qa_member_list":"3-4",
@@ -207,6 +215,7 @@ export default {
     created(){
         console.log(this.$route.path);
         this.showlist = this.route_list[this.$route.path]
+        console.log(this.showlist);
     },
     mounted(){
         // axios({

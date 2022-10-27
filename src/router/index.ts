@@ -44,6 +44,8 @@ import issue_okr from "../components/issue_item/issue_okr.vue"
 import issue_okr_2 from "../components/issue_item/issue_okr_2.vue"
 import issue_okr_3 from "../components/issue_item/issue_okr_3.vue"
 import jump from "../components/jump.vue"
+import issue_sendemail from "../components/issue_item/issue_sendrmail.vue"
+import issue_emailconfig from "../components/issue_item/issue_emailconfig.vue"
 
 const routes = [
   {
@@ -194,6 +196,22 @@ const routes = [
         path: 'issueinfo',
         name: 'issueinfo',
         component: issueinfo,
+        meta:{
+          KeepAlive:true
+        }
+      },
+      {
+        path: 'issuesendemail',
+        name: 'issuesendemail',
+        component: issue_sendemail,
+        meta:{
+          KeepAlive:true
+        }
+      },
+      {
+        path: 'issueemailconfig',
+        name: 'issueemailconfig',
+        component: issue_emailconfig,
         meta:{
           KeepAlive:true
         }

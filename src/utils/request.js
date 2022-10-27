@@ -203,6 +203,8 @@ homead.interceptors.response.use(response => {
                 store.state.noadminurl.push("/qa/issueokr")
                 store.state.noadminurl.push("/qa/preview")
                 store.state.noadminurl.push("/qa/issueBug")
+                store.state.noadminurl.push("/qa/issuesendemail")
+                store.state.noadminurl.push("/qa/issueemailconfig")
             }
             flag = 1
             store.state.zyshow = true
