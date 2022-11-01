@@ -26,4 +26,5 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 app.use(store).use(router).use(ElementPlus,{locale: zhCn,}).use(VXETable).use(VueUeditorWrap).use( CKEditor )
 app.config.globalProperties.$echarts = echarts
 app.mount("#app")
+
 // createApp(App).use(store).use(router).mount('#app')
