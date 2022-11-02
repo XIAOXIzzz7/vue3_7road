@@ -74,7 +74,7 @@
             <router-link v-if="fxshow2==1" to="/qa/issuesendemail">
                 <el-menu-item index="2-3" class="menuitem"><el-icon><Folder /></el-icon> 项目邮件发送 </el-menu-item>
             </router-link>
-            <router-link v-if="fxshow2==1" to="/qa/issueemailconfig">
+            <router-link v-if="fxshow1==1" to="/qa/issueemailconfig">
                 <el-menu-item index="2-4" class="menuitem"><el-icon><Folder /></el-icon> 项目邮件配置 </el-menu-item>
             </router-link>
         </el-menu-item-group>

@@ -103,6 +103,7 @@
     import { ElMessage,ElMessageBox } from 'element-plus'
     import {hdaxios} from "../../utils/request"
     import type { Action } from 'element-plus'
+import { type } from 'os'
 
     const activeName = ref('first')
     const data_set = reactive(
@@ -220,36 +221,69 @@
             })
         })
     function receivers_add(){
-       
         if(data_set.receivers_input != ""){
             if (data_set.receivers == null){
             data_set.receivers = []
-        }
-        if (data_set.cc_receivers == null){
-            data_set.cc_receivers = []
-        }
-        console.log(data_set.receivers);
-        data_set.receivers.push(
-            data_set.receivers_input
-        )
-        data_set.receivers_input=""
-        hpaxios("/api/v1/EmailConfig/",{
-                    project:data_set.check_value,
-                    receivers:data_set.receivers,
-                    cc_receivers:data_set.cc_receivers
-            
-                })
-                .then(res => {
-                    if (res.data.msg=="新增收件人成功"){
-                        ElMessage({
-                        message: res.data.msg,
-                        type: 'success',
+            }
+            if (data_set.cc_receivers == null){
+                data_set.cc_receivers = []
+            }
+            if(data_set.receivers_input.indexOf("<")!=-1){
+                var reg = /[\u4e00-\u9fa5]/g;
+                var reg1 = /[<>，]/g;
+                
+                var data = data_set.receivers_input.replace(reg, "").replace(reg1,"").replace(/\s/g,'').split(",")
+                for(var i in data){
+                    if(data[i]==""){
+                        data.splice(i,1)
+                    }
+                }
+                console.log(data_set.receivers_input.replace(reg, "").replace(reg1,"").replace(/\s/g,''));
+                
+                data_set.receivers = data_set.receivers.concat(data)
+                data_set.receivers_input=""
+                hpaxios("/api/v1/EmailConfig/",{
+                            project:data_set.check_value,
+                            receivers:data,
+                            cc_receivers:data_set.cc_receivers
+                    
+                        })
+                        .then(res => {
+                            if (res.data.msg=="新增收件人成功"){
+                                ElMessage({
+                                message: res.data.msg,
+                                type: 'success',
+                            })
+                            }
+                            else{
+                                ElMessage.error("新增收件人失败")
+                            }
+                        })
+            }
+            else{
+                data_set.receivers.push(
+                data_set.receivers_input
+                )
+                data_set.receivers_input=""
+                hpaxios("/api/v1/EmailConfig/",{
+                        project:data_set.check_value,
+                        receivers:data_set.receivers,
+                        cc_receivers:data_set.cc_receivers
+                
                     })
-                    }
-                    else{
-                        ElMessage.error("新增收件人失败")
-                    }
-                })
+                    .then(res => {
+                        if (res.data.msg=="新增收件人成功"){
+                            ElMessage({
+                            message: res.data.msg,
+                            type: 'success',
+                        })
+                        }
+                        else{
+                            ElMessage.error("新增收件人失败")
+                        }
+                    })
+            }
+            
         }
         
         
@@ -263,27 +297,59 @@
         if (data_set.cc_receivers == null){
             data_set.cc_receivers = []
         }
-        data_set.cc_receivers.push(
+        if(data_set.cc_receivers_input.indexOf("<")!=-1){
+            var reg = /[\u4e00-\u9fa5]/g;
+                var reg1 = /[<>，]/g;
+                var data = data_set.cc_receivers_input.replace(reg, "").replace(reg1,"").replace(/\s/g,'').split(",")
+                console.log(data);
+                for(var i in data){
+                    if(data[i]==""){
+                        data.splice(i,1)
+                    }
+                }
+                data_set.cc_receivers = data_set.cc_receivers.concat(data)
+                data_set.cc_receivers_input=""
+                hpaxios("/api/v1/EmailConfig/",{
+                            project:data_set.check_value,
+                            receivers:data_set.cc_receivers,
+                            cc_receivers:data
+                    
+                        })
+                        .then(res => {
+                            if (res.data.msg=="新增收件人成功"){
+                                ElMessage({
+                                message: res.data.msg,
+                                type: 'success',
+                            })
+                            }
+                            else{
+                                ElMessage.error("新增收件人失败")
+                            }
+                        })
+        }
+        else{
+            data_set.cc_receivers.push(
             data_set.cc_receivers_input
-        )
-        data_set.cc_receivers_input=""
-        hpaxios("/api/v1/EmailConfig/",{
-                    project:data_set.check_value,
-                    receivers:data_set.receivers,
-                    cc_receivers:data_set.cc_receivers
-            
-                })
-                .then(res => {
-                    if (res.data.msg=="新增收件人成功"){
-                        ElMessage({
-                        message: res.data.msg,
-                        type: 'success',
+            )
+            data_set.cc_receivers_input=""
+            hpaxios("/api/v1/EmailConfig/",{
+                        project:data_set.check_value,
+                        receivers:data_set.receivers,
+                        cc_receivers:data_set.cc_receivers
+                
                     })
-                    }
-                    else{
-                        ElMessage.error("新增收件人失败")
-                    }
-                })
+                    .then(res => {
+                        if (res.data.msg=="新增收件人成功"){
+                            ElMessage({
+                            message: res.data.msg,
+                            type: 'success',
+                        })
+                        }
+                        else{
+                            ElMessage.error("新增收件人失败")
+                        }
+                    })
+            }
         }
     }
     function project_add(){
