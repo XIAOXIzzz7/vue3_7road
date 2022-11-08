@@ -777,7 +777,7 @@
                             placeholder="请输入"
                             prefix-icon="el-icon-search"
                             v-model="input"
-                            @input="search"
+                            @input="search_value_info()"
                             style="max-width:200px;margin:30px">
                         </el-input>
                     </div>
@@ -5993,7 +5993,8 @@ export default defineComponent({
             this.hanguppagesize=val
         },
         // 关键词查询
-        search(){
+        search_value_info(){
+            console.log(123);
             this.page=1
             this.currentPage=1
               if(this.value == "all" && this.memvalues =="all"){
@@ -6040,6 +6041,7 @@ export default defineComponent({
         },
         // 未关闭BUG追踪关键词查询
         notclosedsearch(){
+            console.log(123);
             this.notclosedpage=1
             this.notclosedcurrentPage=1
              if(this.value == "all" && this.memvalues =="all"){

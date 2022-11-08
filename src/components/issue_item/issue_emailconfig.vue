@@ -233,7 +233,7 @@ import { type } from 'os'
                 var reg1 = /[<>，]/g;
                 
                 var data = data_set.receivers_input.replace(reg, "").replace(reg1,"").replace(/\s/g,'').split(",")
-                for(var i in data){
+                for(let i=0;i<data.length;i++){
                     if(data[i]==""){
                         data.splice(i,1)
                     }
@@ -302,7 +302,7 @@ import { type } from 'os'
                 var reg1 = /[<>，]/g;
                 var data = data_set.cc_receivers_input.replace(reg, "").replace(reg1,"").replace(/\s/g,'').split(",")
                 console.log(data);
-                for(var i in data){
+                for(let i=0;i<data.length;i++){
                     if(data[i]==""){
                         data.splice(i,1)
                     }
