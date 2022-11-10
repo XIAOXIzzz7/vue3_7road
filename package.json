@@ -19,7 +19,7 @@
     "autoprefixer": "10.4.5",
     "axios": "^0.24.0",
     "bootstrap": "^5.0.2",
-    "ckeditor5-custom-build-xi": "^1.1.2",
+    "ckeditor5-custom-build-xi": "^1.1.3",
     "core-js": "^3.8.3",
     "datatables.net-dt": "^1.1.0",
     "echarts": "^5.2.2",

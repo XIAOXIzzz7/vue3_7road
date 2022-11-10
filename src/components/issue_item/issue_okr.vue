@@ -464,52 +464,90 @@
                 <div v-if="kg_show" class="animate__animated animate__fadeIn" >
                     <div style="display:flex">
                         <el-row style="flex:0 0 45%;display:flex;flex-wrap: wrap;box-shadow:0px -5px 5px #88888830,-5px 0px 5px #88888830,5px 0px 5px #88888830,0px 5px 5px #88888830;"> 
-                            <el-col :span="8" class="card_css">
+                            <el-col :span="6" class="card_css">
                             <el-card shadow="always" style="display:flex;flex-direction:column">
                                 <div style="display:flex;">
                                     <span>总需求数:</span>
                                     <span>{{kg_issue_pie.all}}</span>
                                 </div>
-                                <div style="display:flex;">
+                                <div style="display:flex;margin-top:20px">
                                     <el-progress
                                         style="flex: 0 0 100%"
                                         :text-inside="true"
                                         :stroke-width="24"
+                                        :show-text="false"
                                         :percentage="100"
+                                        status="success"
+                                        :indeterminate="true"
+                                        />
+                                </div>
+                                
+                            </el-card>
+                            </el-col>
+                            <el-col :span="6" class="card_css">
+                            <el-card shadow="always" style="display:flex;flex-direction:column">
+                                <div style="display:flex;">
+                                    <span>完成需求数：</span>
+                                    <span>{{kg_issue_pie.completed}}</span>
+                                </div>
+                                <div style="display:flex;margin-top:20px">
+                                    <el-progress
+                                        style="flex: 0 0 100%"
+                                        :text-inside="true"
+                                        :stroke-width="24"
+                                        :percentage="kg_issue_pie.completed_percentage"
                                         status="success"
                                         />
                                 </div>
                             </el-card>
                             </el-col>
-                            <el-col :span="8" class="card_css">
-                            <el-card shadow="always">
-                                <div style="display:flex;">
-                                    <span>完成需求数:</span>
-                                    <span>{{kg_issue_pie.completed}}</span>
-                                </div>
-                            </el-card>
-                            </el-col>
-                            <el-col :span="8" class="card_css">
+                            <el-col :span="6" class="card_css">
                             <el-card shadow="always" style="display:flex;flex-direction:column">
-                                <div style="display:flex;">
+                                <div style="display:flex">
                                     <span>延期需求数:</span>
                                     <span>{{kg_issue_pie.delay}}</span>
                                 </div>
-                            </el-card>
-                            </el-col>
-                            <el-col :span="8" class="card_css">
-                            <el-card shadow="always">
-                                <div style="display:flex;">
-                                    <span>需求取消数数:</span>
-                                    <span>{{kg_issue_pie.cancel}}</span>
+                                <div style="display:flex;margin-top:20px;">
+                                    <el-progress
+                                        style="flex: 0 0 100%"
+                                        :text-inside="true"
+                                        :stroke-width="24"
+                                        :percentage="kg_issue_pie.delay_percentage"
+                                        status="exception"
+                                        />
                                 </div>
                             </el-card>
                             </el-col>
-                            <el-col :span="8" class="card_css">
-                            <el-card shadow="always">
-                                <div style="display:flex;">
+                            <el-col :span="6" class="card_css">
+                            <el-card shadow="always" style="display:flex;flex-direction:column">
+                                <div style="display:flex">
+                                    <span>需求取消数数:</span>
+                                    <span>{{kg_issue_pie.cancel}}</span>
+                                </div>
+                                <div style="display:flex;margin-top:20px">
+                                    <el-progress
+                                        style="flex: 0 0 100%"
+                                        :text-inside="true"
+                                        :stroke-width="24"
+                                        :percentage="kg_issue_pie.cancel_percentage"
+                                        status="warning"
+                                        />
+                                </div>
+                            </el-card>
+                            </el-col>
+                            <el-col :span="6" class="card_css">
+                            <el-card shadow="always" style="display:flex;flex-direction:column">
+                                <div style="display:flex">
                                     <span>进行中的需求:</span>
                                     <span>{{kg_issue_pie.ongoing}}</span>
+                                </div>
+                                <div style="display:flex;margin-top:20px">
+                                    <el-progress
+                                        style="flex: 0 0 100%"
+                                        :text-inside="true"
+                                        :stroke-width="24"
+                                        :percentage="kg_issue_pie.ongoing_percentage"
+                                        />
                                 </div>
                             </el-card>
                             </el-col>
@@ -763,8 +801,7 @@
                 function kg_member_check(){
                     kgget_data.kg_starttime=moment(kgget_data.kg_datetime[0],"yyyy-MM-DD").format().split('T')[0]
                     kgget_data.kg_endtime=moment(kgget_data.kg_datetime[1],"yyyy-MM-DD").format().split('T')[0]
-                    kgget_data.kg_show=true
-                    kgget_data.kg_tag=true
+                   
                     if (kgget_data.kgselect[2]==null || kgget_data.kg_datetime[0]==null || kgget_data.kg_datetime[1]==null) {
                         ElMessage({
                             showClose: true,
@@ -773,13 +810,15 @@
                         })
                     }
                     else{
+                        kgget_data.kg_show=true
+                        kgget_data.kg_tag=true
                         axios({
                             url: '/api/v1/ObjectiveKpiIssueInfo/',
                             method:'get',
                             params:{
                                     member:kgget_data.kgselect[2],
-                                    start:moment(kgget_data.kg_datetime[0],"yyyy-MM-DD").format().split('T')[0],
-                                    end:moment(kgget_data.kg_datetime[1],"yyyy-MM-DD").format().split('T')[0]
+                                    start:kgget_data.kg_starttime,
+                                    end:kgget_data.kg_endtime
                                 }
                             }).then(res => {
                                 var issue_pie = [
@@ -802,6 +841,10 @@
                                 ]
                                 kgget_data.kg_echars1_data.series[0].data=issue_pie
                                 kgget_data.kg_issue_pie=res.data.data
+                                kgget_data.kg_issue_pie["completed_percentage"]=(parseFloat(res.data.data.completed/res.data.data.all)*100).toFixed(2)
+                                kgget_data.kg_issue_pie["cancel_percentage"]=(parseFloat(res.data.data.cance/res.data.data.all)*100).toFixed(2)
+                                kgget_data.kg_issue_pie["delay_percentage"]=(parseFloat(res.data.data.delay/res.data.data.all)*100).toFixed(2)
+                                kgget_data.kg_issue_pie["ongoing_percentage"]=(parseFloat(res.data.data.ongoing/res.data.data.all)*100).toFixed(2)
                                 
                                
                             })
