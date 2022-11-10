@@ -1,5 +1,5 @@
 <template>
-    <el-button @click="check()">1</el-button>
+    <!-- <el-button @click="check()">1</el-button> -->
     <div style="margin:0px 20px 20px 20px;">
         <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
             <el-tab-pane label="邮件发送配置" name="first" style="display:flex ;">
@@ -29,12 +29,15 @@
                                 :value="item.value"
                                 />
                             </el-select>
-
-                            <el-input style="width:250px;margin:0px 0px 0px 8px;" v-model="data_set.project_input" placeholder="组名">
+                            <div style="display:flex;height:32px">
+                                <input style="padding-left:8px;outline-color:#d4d2d2;border:1px solid #e0e0e0;width:162px;margin:0px 0px 0px 8px;font-size: 15px;" v-model="data_set.project_input" placeholder="组名"/>
+                                <el-button @click="project_add()">新增项目</el-button>
+                            </div>
+                            <!-- <el-input  style="width:250px;margin:0px 0px 0px 8px;" v-model="data_set.project_input" placeholder="组名">
                                 <template #append>
                                     <el-button @click="project_add()">新增项目</el-button>
                                 </template>
-                            </el-input>
+                            </el-input> -->
                             <!-- <el-button type="primary" plain @click="check_mem()">查看</el-button> -->
                             <!-- <el-button type="primary" plain @click="up()">提交</el-button> -->
                         </div>
@@ -44,11 +47,15 @@
                         <div style="flex:0 0 49%;padding-right:20px;">
                             <div style="display: flex;flex-direction: column;">
                                 <el-tag class="ml-2" style="float:left;width:100px" type="success">接收人</el-tag>
-                                <el-input v-if="data_set.check_value!=''" :disabled="data_set.check_value==''" style="width:300px;margin:20px 0px 0px 0px;" v-model="data_set.receivers_input" placeholder="Please input">
+                                <div v-if="data_set.check_value!=''" :disabled="data_set.check_value==''" style="display:flex;height: 32px;margin-top:20px">
+                                    <input v-if="data_set.check_value!=''" :disabled="data_set.check_value==''" style="outline-color:#d4d2d2;margin-top:0px;border:1px solid #e0e0e0;width:250px;font-size:15px;" v-model="data_set.receivers_input" placeholder="Please input"/>
+                                    <el-button :disabled="data_set.check_value==''" @click="receivers_add()">新增接收人</el-button>
+                                </div>
+                                <!-- <el-input v-if="data_set.check_value!=''" :disabled="data_set.check_value==''" style="width:300px;margin:20px 0px 0px 0px;" v-model="data_set.receivers_input" placeholder="Please input">
                                     <template #append>
                                         <el-button :disabled="data_set.check_value==''" @click="receivers_add()">新增接收人</el-button>
                                     </template>
-                                </el-input>
+                                </el-input> -->
                             </div>
                             <el-divider content-position="left" style="margin-top:30px">receivers</el-divider>
                             <el-alert v-if="data_set.receivers!=null" style="margin-bottom:10px;height:60px;" v-for="i in data_set.receivers.length" type="success" :closable="false">
@@ -66,11 +73,15 @@
                         <div style="flex:0 0 49%;">
                             <div style="display: flex;flex-direction: column;">
                                 <el-tag class="ml-2" style="float:left;margin-left:20px;width:100px;" type="warning">抄送人</el-tag>
-                                <el-input v-if="data_set.check_value!=''" :disabled="data_set.check_value==''" style="width:300px;margin:20px 0px 0px 0px;" v-model="data_set.cc_receivers_input" placeholder="Please input">
+                                <div v-if="data_set.check_value!=''" :disabled="data_set.check_value==''" style="display:flex;height: 32px;margin-top:20px">
+                                    <input v-if="data_set.check_value!=''" :disabled="data_set.check_value==''" style="outline-color:#d4d2d2;margin-top:0px;border:1px solid #e0e0e0;width:250px;font-size:15px;" v-model="data_set.cc_receivers_input" placeholder="Please input"/>
+                                    <el-button :disabled="data_set.check_value==''" @click="cc_receivers_add()">新增抄送人</el-button>
+                                </div>
+                                <!-- <el-input v-if="data_set.check_value!=''" :disabled="data_set.check_value==''" style="width:300px;margin:20px 0px 0px 0px;" v-model="data_set.cc_receivers_input" placeholder="Please input">
                                     <template #append>
                                         <el-button :disabled="data_set.check_value==''" @click="cc_receivers_add()">新增抄送人</el-button>
                                     </template>
-                                </el-input>
+                                </el-input> -->
                             </div>
                             
                             <el-divider content-position="left" style="margin-top:30px">cc_receivers</el-divider>
@@ -98,12 +109,10 @@
     import {hpaxios} from "../../utils/request.js"
     import {hgaxios as axios} from "../../utils/request"
     import { reactive, toRefs } from '@vue/reactivity'
-    import { log } from 'console'
     import { range } from 'lodash'
     import { ElMessage,ElMessageBox } from 'element-plus'
     import {hdaxios} from "../../utils/request"
     import type { Action } from 'element-plus'
-import { type } from 'os'
 
     const activeName = ref('first')
     const data_set = reactive(
@@ -311,7 +320,7 @@ import { type } from 'os'
                 data_set.cc_receivers_input=""
                 hpaxios("/api/v1/EmailConfig/",{
                             project:data_set.check_value,
-                            receivers:data_set.cc_receivers,
+                            receivers:data_set.receivers,
                             cc_receivers:data
                     
                         })
@@ -482,5 +491,6 @@ import { type } from 'os'
 .el-alert__content{
     width: 100%;
 }
+
 </style>
   

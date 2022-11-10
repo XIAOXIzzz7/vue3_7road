@@ -431,7 +431,71 @@
     
     <!-- 客观数据评价页面 -->
     <div v-show="titleshow2">
-        客观数据评价
+        <div class="animate__animated animate__backInRight">
+            <el-card class="box-card">
+            <template #header>
+            <div class="card-header">
+                <span style="display:flex ;">
+                    <el-cascader size="default" @visible-change="kg_member_choice()" :options="kgoptions" :show-all-levels="false" v-model="kgselect"/>
+                    <!-- <div class="block" style="margin-left:20px;">      
+                        <el-date-picker
+                        v-model="kg_datetime"
+                        type="dates"
+                        placeholder="选择时间"
+                        />
+                    </div> -->
+                    <div class="block" style="margin-left:20px">
+                        <el-date-picker
+                            
+                            v-model="kg_datetime"
+                            type="daterange"
+                            range-separator="To"
+                            start-placeholder="开始时间"
+                            end-placeholder="结束时间"
+                            style="height:32px"
+                            size="default"
+                        />
+                        </div>
+                    <el-tag  type="success" style="margin-left:20px;padding:5px;height:33px;" v-if="kg_tag" class="animate__animated animate__fadeInRightBig">{{kgselect[2]}}---个人信息总览</el-tag>
+                </span>
+                <el-button class="button" text @click="kg_member_check()">查询</el-button>
+            </div>
+            </template>
+            <div v-if="kg_show" class="animate__animated animate__fadeIn" >
+                <div style="display:flex">
+                    <el-row style="flex:0 0 45%;display:flex;flex-wrap: wrap;box-shadow:0px -5px 5px #88888830,-5px 0px 5px #88888830,5px 0px 5px #88888830,0px 5px 5px #88888830;"> 
+                        <el-col :span="8" class="card_css">
+                        <el-card shadow="always">总需求数:</el-card>
+                        </el-col>
+                        <el-col :span="8" class="card_css">
+                        <el-card shadow="always">完成需求数</el-card>
+                        </el-col>
+                        <el-col :span="8" class="card_css">
+                        <el-card shadow="always">延期需求数</el-card>
+                        </el-col>
+                        <el-col :span="8" class="card_css">
+                        <el-card shadow="always">取消需求数</el-card>
+                        </el-col>
+                        <el-col :span="8" class="card_css">
+                        <el-card shadow="always">进行中的需求</el-card>
+                        </el-col>
+                       
+                    </el-row>
+                    <div style="flex: 0 0 2%"></div>
+                    <div style="height:400px;min-height:400px;padding:20px;flex: 0 0 53%;box-shadow:0px -5px 5px #88888830,-5px 0px 5px #88888830,5px 0px 5px #88888830,0px 5px 5px #88888830;" id="kg_echars_1"></div>
+                </div>
+                <el-divider content-position="left">Annual statistics</el-divider>
+                <div style="display:flex;">
+                    <div style="flex:0 0 100%;height:400px;padding:20px;min-height:400px;box-shadow:0px -5px 5px #88888830,-5px 0px 5px #88888830,5px 0px 5px #88888830,0px 5px 5px #88888830;" id="kg_echars_2"></div>
+                </div>
+                <el-divider content-position="left">Histogram</el-divider>
+                <div style="display:flex;">
+                    <div style="flex:0 0 100%;height:400px;min-height:400px;box-shadow:0px -5px 5px #88888830,-5px 0px 5px #88888830,5px 0px 5px #88888830,0px 5px 5px #88888830;" id="kg_echars_3"></div>
+                </div>
+            </div>
+
+        </el-card>
+        </div>
     </div>
     <!-- 综合考评页面 -->
     <div v-show="titleshow3">
@@ -441,6 +505,7 @@
 </template>
 <script>
 import * as echarts from 'echarts';
+import moment from "moment"
 import { reactive, toRefs } from '@vue/reactivity'
 import {onMounted, onUpdated} from "vue"
 import {hgaxios as axios} from "../../utils/request"
@@ -449,11 +514,477 @@ import { ElMessage } from 'element-plus'
 import { setup } from 'xe-utils/ctor'
 import {useStore} from 'vuex'
 import {hpaxios} from "../../utils/request"
+import { StarFilled } from '@element-plus/icons-vue'
 import {hputaxios} from "../../utils/request"
 import {
      useRouter } from "vue-router";
-    export default{
+        export default{
         setup(){
+            // 客观数据评价功能
+            const kgget_data = reactive(
+                {
+                    kgselect:"",
+                    kgoptions:[],
+                    kg_datetime:"",
+                    kg_show:false,
+                    kg_tag:false,
+                    kg_data_list:[],
+                    kg_member_info:{},
+                    kg_echars1_data:{
+                        title: {
+                            text: '个人需求统计图',
+                            subtext: 'ALL DATA',
+                            left: 'center'
+                        },
+                        tooltip: {
+                            trigger: 'item'
+                        },
+                        legend: {
+                            orient: 'vertical',
+                            left: 'left'
+                        },
+                        series: [
+                            {
+                            name: 'Access From',
+                            type: 'pie',
+                            radius: '70%',
+                            data: [
+                                { value: 1048, name: '总需求数' },
+                                { value: 735, name: '完成需求数' },
+                                { value: 580, name: '延期需求数' },
+                                { value: 484, name: '取消需求数' },
+                                { value: 300, name: '进行中的需求' }
+                            ],
+                            emphasis: {
+                                itemStyle: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                }
+                            }
+                            }
+                        ]
+                    },
+                    kg_echars2_data:{
+                        title: {
+                            text: '年度统计'
+                        },
+                        tooltip: {
+                            trigger: 'axis'
+                        },
+                        legend: {
+                            data: ['xxxx']
+                        },
+                        grid: {
+                            left: '3%',
+                            right: '4%',
+                            bottom: '3%',
+                            containLabel: true
+                        },
+                        toolbox: {
+                            feature: {
+                            saveAsImage: {}
+                            }
+                        },
+                        xAxis: {
+                            type: 'category',
+                            boundaryGap: false,
+                            data: ['一月', '二月', '三月', '四月', '五月', '六月', '七月']
+                        },
+                        yAxis: {
+                            type: 'value'
+                        },
+                        series: [
+                            {
+                            name: 'Email',
+                            type: 'line',
+                            stack: 'Total',
+                            data: [120, 132, 101, 134, 90, 230, 210]
+                            },
+                            
+                        ]
+                    },
+                    kg_echars3_data:{
+                        tooltip: {
+                            trigger: 'axis',
+                            axisPointer: {
+                            type: 'shadow'
+                            }
+                        },
+                        legend: {},
+                        grid: {
+                            left: '3%',
+                            right: '4%',
+                            bottom: '3%',
+                            containLabel: true
+                        },
+                        xAxis: [
+                            {
+                            type: 'category',
+                            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                            }
+                        ],
+                        yAxis: [
+                            {
+                            type: 'value'
+                            }
+                        ],
+                        series: [
+                            {
+                            name: 'Direct',
+                            type: 'bar',
+                            emphasis: {
+                                focus: 'series'
+                            },
+                            data: [320, 332, 301, 334, 390, 330, 320]
+                            },
+                            {
+                            name: 'Email',
+                            type: 'bar',
+                            stack: 'Ad',
+                            emphasis: {
+                                focus: 'series'
+                            },
+                            data: [120, 132, 101, 134, 90, 230, 210]
+                            },
+                            {
+                            name: 'Union Ads',
+                            type: 'bar',
+                            stack: 'Ad',
+                            emphasis: {
+                                focus: 'series'
+                            },
+                            data: [220, 182, 191, 234, 290, 330, 310]
+                            },
+                            {
+                            name: 'Video Ads',
+                            type: 'bar',
+                            stack: 'Ad',
+                            emphasis: {
+                                focus: 'series'
+                            },
+                            data: [150, 232, 201, 154, 190, 330, 410]
+                            },
+                            {
+                            name: 'Search Engine',
+                            type: 'bar',
+                            data: [862, 1018, 964, 1026, 1679, 1600, 1570],
+                            emphasis: {
+                                focus: 'series'
+                            }
+                            },
+                            {
+                            name: 'Baidu',
+                            type: 'bar',
+                            barWidth: 5,
+                            stack: 'Search Engine',
+                            emphasis: {
+                                focus: 'series'
+                            },
+                            data: [620, 732, 701, 734, 1090, 1130, 1120]
+                            },
+                            {
+                            name: 'Google',
+                            type: 'bar',
+                            stack: 'Search Engine',
+                            emphasis: {
+                                focus: 'series'
+                            },
+                            data: [120, 132, 101, 134, 290, 230, 220]
+                            },
+                            {
+                            name: 'Bing',
+                            type: 'bar',
+                            stack: 'Search Engine',
+                            emphasis: {
+                                focus: 'series'
+                            },
+                            data: [60, 72, 71, 74, 190, 130, 110]
+                            },
+                            {
+                            name: 'Others',
+                            type: 'bar',
+                            stack: 'Search Engine',
+                            emphasis: {
+                                focus: 'series'
+                            },
+                            data: [62, 82, 91, 84, 109, 110, 120]
+                            }
+                        ]
+                        }
+                    
+                }
+            )
+            const shortcuts = [
+                {
+                    text: 'Last week',
+                    value: () => {
+                    const end = new Date()
+                    const start = new Date()
+                    start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+                    return [start, end]
+                    },
+                },
+                {
+                    text: 'Last month',
+                    value: () => {
+                    const end = new Date()
+                    const start = new Date()
+                    start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+                    return [start, end]
+                    },
+                },
+                {
+                    text: 'Last 3 months',
+                    value: () => {
+                    const end = new Date()
+                    const start = new Date()
+                    start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+                    return [start, end]
+                    },
+                },
+                ]
+                function kg_memberchart(){
+                    // kgget_data.data_list=[]
+                    // kgget_data.member_info=[]
+                    
+                    // axios({
+                    //         url: '/api/v1/MemberScoreChartData/',
+                    //         method:'get',
+                    //         params:{
+                    //             year:moment(kgget_data.kg_datetime[1],"yyyy-MM-DD").format().split('T')[0].split("-")[0],
+                    //             member:kgget_data.kgselect[2]
+                    //             }
+                    //         })
+                    //         .then(res => {
+                            
+                    //                 kgget_data.member_info =res.data.data.member_info
+                    //                 kgget_data.data_list =res.data.data.date_list
+                    //                 var kg_time = kgget_data.kg_datetime[1],"yyyy-MM-DD").format().split('T')[0].split("-")[0]
+                    //                 console.log(kgget_data.member_info);
+                    //             axios({
+                    //                 url: '/api/v1/Echarts/',
+                    //                 method:'get',
+                    //                 params:{
+                    //                     title:kgget_data.kgselect[2]+" "+kg_time+"年度数据统计",
+                    //                     echarts_type:'line',
+                    //                     series_option:{"smooth": "True", "seriesLayoutBy": "row", "barWidth" : 60,label:{show: true,"formatter": '{c}'}},
+                    //                     series_data:kgget_data.member_info,
+                    //                     xAxis:JSON.stringify(kgget_data.data_list),
+                    //                     color:JSON.stringify(['#409EFF90', '#ff4242', '#318C80', "#51D9B5", '#A6E582'])
+                    //                     }
+                    //                 })
+                    //                 .then(res => {
+                    //                         var dataa = res.data.data
+                    //                         mem.setOption(kgget_data.kg_echars1,true) 
+                                            
+                    //                     })
+                                
+                    //         })
+                    }
+            function kg_member_check(){
+               
+                // if (kgget_data.kgselect[2]==null || kgget_data.kg_datetime[0]==null || kgget_data.kg_datetime[1]==null) {
+                //     ElMessage({
+                //         showClose: true,
+                //         message: '请填写全部参数',
+                //         type: 'error',
+                //     })
+                // }
+                // else{
+                //     kgget_data.kg_show=true
+                //     kgget_data.kg_tag=true
+                //     setTimeout(() => {
+                //         var kg_echars1 = echarts.getInstanceByDom(document.getElementById("kg_echars_1"))
+                //         if (kg_echars1 == null) { // 如果不存在，就进行初始化
+                //             kg_echars1 = echarts.init(document.getElementById("kg_echars_1"));
+                //         }
+                //         kg_echars1.setOption(kgget_data.kg_echars1_data,true);
+                //         var kg_echars2 = echarts.getInstanceByDom(document.getElementById("kg_echars_2"))
+                //         if (kg_echars2 == null) { // 如果不存在，就进行初始化
+                //             kg_echars2 = echarts.init(document.getElementById("kg_echars_2"));
+                //         }
+                //         kg_echars2.setOption(kgget_data.kg_echars2_data,true);
+                //         var kg_echars3 = echarts.getInstanceByDom(document.getElementById("kg_echars_3"))
+                //         if (kg_echars3 == null) { // 如果不存在，就进行初始化
+                //             kg_echars3 = echarts.init(document.getElementById("kg_echars_3"));
+                //         }
+                //         kg_echars3.setOption(kgget_data.kg_echars3_data,true);
+                //     }, 300);
+                // }
+                kgget_data.kg_show=true
+                kgget_data.kg_tag=true
+                setTimeout(() => {
+                    var kg_echars1 = echarts.getInstanceByDom(document.getElementById("kg_echars_1"))
+                    if (kg_echars1 == null) { // 如果不存在，就进行初始化
+                        kg_echars1 = echarts.init(document.getElementById("kg_echars_1"));
+                    }
+                    kg_echars1.setOption(kgget_data.kg_echars1_data,true);
+                    // kg_memberchart()
+                    var kg_echars3 = echarts.getInstanceByDom(document.getElementById("kg_echars_3"))
+                    if (kg_echars3 == null) { // 如果不存在，就进行初始化
+                        kg_echars3 = echarts.init(document.getElementById("kg_echars_3"));
+                    }
+                    kg_echars3.setOption(kgget_data.kg_echars3_data,true);
+                }, 300);
+                console.log(kgget_data.kgselect[2]);
+               
+                console.log(moment(kgget_data.kg_datetime[0],"yyyy-MM-DD").format().split('T')[0]);
+                console.log(moment(kgget_data.kg_datetime[1],"yyyy-MM-DD").format().split('T')[0]);
+            }
+            function kg_member_choice(){
+                kgget_data.kg_tag=false
+                kgget_data.kg_show=false
+                axios({
+                    url: '/api/v1/AdminConfig/',
+                    method:'get',
+                    params:{
+                            type:"member"
+                        }
+                    }).then(res => {
+                        var member_list = [
+                        {
+                            value:"所有在职",
+                            label:"在职",
+                            children:[
+                                {
+                                    value:"上海正职",
+                                    label:"上海正职",
+                                    children:[
+                                        
+                                    ]
+                                },
+                                {
+                                    value:"上海外包",
+                                    label:"上海外包",
+                                    children:[
+
+                                    ]
+                                },
+                                {
+                                    value:"深圳正职",
+                                    label:"深圳正职",
+                                    children:[
+                                        
+                                    ]
+                                },
+                                {
+                                    value:"深圳外包",
+                                    label:"深圳外包",
+                                    children:[
+
+                                    ]
+                                },
+                            ]
+                        },
+                        {
+                            value:"所有离职",
+                            label:"离职",
+                            children:[
+                                {
+                                    value:"上海正职",
+                                    label:"上海正职",
+                                    children:[
+                                        
+                                    ]
+                                },
+                                {
+                                    value:"上海外包",
+                                    label:"上海外包",
+                                    children:[
+
+                                    ]
+                                },
+                                {
+                                    value:"深圳正职",
+                                    label:"深圳正职",
+                                    children:[
+                                        
+                                    ]
+                                },
+                                {
+                                    value:"深圳外包",
+                                    label:"深圳外包",
+                                    children:[
+
+                                    ]
+                                },
+                            ]
+                        }
+                    
+                    ]
+                    for (var i in res.data.data){
+                        var info = res.data.data[i]
+                    
+                        if (info['group'] == '上海外包' && info['status'] == "在职"){
+                            member_list[0]["children"][1]["children"].push(
+                                {
+                                    value:i,
+                                    label:i
+                                }
+                            )
+                        }
+                        else if(info['group'] == '上海正职' && info['status'] == "在职"){
+                            member_list[0]["children"][0]["children"].push(
+                                {
+                                    value:i,
+                                    label:i
+                                }
+                            )
+                        }
+                        else if(info['group'] == '深圳正职' && info['status'] == "在职"){
+                            member_list[0]["children"][2]["children"].push(
+                                {
+                                    value:i,
+                                    label:i
+                                }
+                            )
+                        }else if(info['group'] == '深圳外包' && info['status'] == "在职"){
+                            member_list[0]["children"][3]["children"].push(
+                                {
+                                    value:i,
+                                    label:i
+                                }
+                            )
+                        }
+                        else if(info['group'] == '上海正职' && info['status'] == "离职"){
+                            member_list[1]["children"][0]["children"].push(
+                                {
+                                    value:i,
+                                    label:i
+                                }
+                            )
+                        }
+                        else if(info['group'] == '上海外包' && info['status'] == "离职"){
+                            member_list[1]["children"][1]["children"].push(
+                                {
+                                    value:i,
+                                    label:i
+                                }
+                            )
+                        }
+                        else if(info['group'] == '深圳正职' && info['status'] == "离职"){
+                            member_list[1]["children"][2]["children"].push(
+                                {
+                                    value:i,
+                                    label:i
+                                }
+                            )
+                        }
+                        else if(info['group'] == '深圳外包' && info['status'] == "离职"){
+                            member_list[1]["children"][3]["children"].push(
+                                {
+                                    value:i,
+                                    label:i
+                                }
+                            )
+                        }
+
+                    }
+                    console.log(member_list);
+                    kgget_data.kgoptions = member_list
+                    })
+            }
             const router = useRouter();
             // 主观数据评价功能
             const store = useStore()
@@ -1328,6 +1859,7 @@ import {
             }
             return{ 
                 ...toRefs(get_data),
+                ...toRefs(kgget_data),
                 create,
                 add,
                 check,
@@ -1346,7 +1878,10 @@ import {
                 piechartsclick,
                 piecharts_contrast,
                 piechartsstyle,
-                refresh
+                refresh,
+                kg_member_choice,
+                kg_member_check,
+                shortcuts
                
                 
                
@@ -1356,6 +1891,27 @@ import {
 
 </script>
 <style scoped >
+.demo-date-picker {
+  display: flex;
+  width: 100%;
+  padding: 0;
+  flex-wrap: wrap;
+}
+.demo-date-picker .block {
+  padding: 30px 0;
+  text-align: center;
+  border-right: solid 1px var(--el-border-color);
+  flex: 1;
+}
+.demo-date-picker .block:last-child {
+  border-right: none;
+}
+.demo-date-picker .demonstration {
+  display: block;
+  color: var(--el-text-color-secondary);
+  font-size: 14px;
+  margin-bottom: 20px;
+}
 .title{
     height:40px;
     box-shadow:0 4px 12px rgb(31 45 61 / 5%);
@@ -1418,5 +1974,62 @@ div/deep/.el-textarea__inner{
     min-height:400px; */
     margin-bottom: 3%
 }
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+}
 
+.text {
+  font-size: 14px;
+}
+
+.item {
+  margin-bottom: 18px;
+}
+
+.box-card {
+  width: 100%;
+}
+.demo-date-picker {
+  display: flex;
+  width: 100%;
+  padding: 0;
+  flex-wrap: wrap;
+}
+
+.demo-date-picker .block {
+  padding: 30px 0;
+  text-align: center;
+  border-right: solid 1px var(--el-border-color);
+  flex: 1;
+}
+.demo-date-picker .block:last-child {
+  border-right: none;
+}
+
+.demo-date-picker .container {
+  flex: 1;
+  border-right: solid 1px var(--el-border-color);
+}
+.demo-date-picker .container .block {
+  border-right: none;
+}
+.demo-date-picker .container .block:last-child {
+  border-top: solid 1px var(--el-border-color);
+}
+.demo-date-picker .container:last-child {
+  border-right: none;
+}
+
+.demo-date-picker .demonstration {
+  display: block;
+  color: var(--el-text-color-secondary);
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+.card_css{
+    margin: 20px;
+}
 </style>
