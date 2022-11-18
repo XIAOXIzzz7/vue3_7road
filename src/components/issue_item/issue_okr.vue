@@ -446,7 +446,7 @@
                         </div> -->
                         <div class="block" style="margin-left:20px">
                             <el-date-picker
-                                
+                                @change="kg_datatime_choice()"
                                 v-model="kg_datetime"
                                 type="daterange"
                                 range-separator="To"
@@ -463,14 +463,25 @@
                 </template>
                 <div v-if="kg_show" class="animate__animated animate__fadeIn" >
                     <div style="display:flex">
-                        <el-row style="flex:0 0 45%;display:flex;flex-wrap: wrap;box-shadow:0px -5px 5px #88888830,-5px 0px 5px #88888830,5px 0px 5px #88888830,0px 5px 5px #88888830;"> 
-                            <el-col :span="6" class="card_css">
-                            <el-card shadow="always" style="display:flex;flex-direction:column">
+                        <el-row style="flex:0 0 50%;display:flex;flex-wrap: wrap;box-shadow:0px -5px 5px #88888830,-5px 0px 5px #88888830,5px 0px 5px #88888830,0px 5px 5px #88888830;"> 
+                            <div class="box" style="height:140px;">
                                 <div style="display:flex;">
-                                    <span>总需求数:</span>
-                                    <span>{{kg_issue_pie.all}}</span>
+                                    <span style="color:#5f6e82;font-size:14px">总需求数</span>
                                 </div>
-                                <div style="display:flex;margin-top:20px">
+                                <div style="display:flex;">
+                                    <span style="color:#5f6e82;font-size:14px">
+                                        {{kg_starttime}} | {{kg_endtime}}    
+                                    </span>
+                                </div>
+                                <div style="display:flex;">
+                                    <span style="font-size:30px">
+                                        {{kg_issue_pie.all}}
+                                    </span>
+                                    <span style="color:#5f6e82;font-size:14px;height: 20px;margin-top: 17px;">
+                                        个
+                                    </span>
+                                </div>
+                                <div style="display:flex">
                                     <el-progress
                                         style="flex: 0 0 100%"
                                         :text-inside="true"
@@ -479,96 +490,473 @@
                                         :percentage="100"
                                         status="success"
                                         :indeterminate="true"
+                                        color="#95d475"
                                         />
                                 </div>
                                 
-                            </el-card>
-                            </el-col>
-                            <el-col :span="6" class="card_css">
-                            <el-card shadow="always" style="display:flex;flex-direction:column">
+                            </div>
+                            <div class="box" style="height:140px;">
                                 <div style="display:flex;">
-                                    <span>完成需求数：</span>
-                                    <span>{{kg_issue_pie.completed}}</span>
+                                    <span style="color:#5f6e82;font-size:14px">完成需求数</span>
                                 </div>
-                                <div style="display:flex;margin-top:20px">
+                                <div style="display:flex;">
+                                    <span style="color:#5f6e82;font-size:14px">
+                                        {{kg_starttime}} | {{kg_endtime}}    
+                                    </span>
+                                </div>
+                                <div style="display:flex;">
+                                    <span style="font-size:30px">
+                                        {{kg_issue_pie.completed}}
+                                    </span>
+                                    <span style="color:#5f6e82;font-size:14px;height: 20px;margin-top: 17px;">
+                                        个
+                                    </span>
+                                </div>
+                                <div style="display:flex">
                                     <el-progress
                                         style="flex: 0 0 100%"
                                         :text-inside="true"
                                         :stroke-width="24"
                                         :percentage="kg_issue_pie.completed_percentage"
                                         status="success"
+                                        color=" #95d475"
+                               
                                         />
                                 </div>
-                            </el-card>
-                            </el-col>
-                            <el-col :span="6" class="card_css">
-                            <el-card shadow="always" style="display:flex;flex-direction:column">
-                                <div style="display:flex">
-                                    <span>延期需求数:</span>
-                                    <span>{{kg_issue_pie.delay}}</span>
+                            </div>
+                            <div class="box" style="height:140px;">
+                                <div style="display:flex;">
+                                    <span style="color:#5f6e82;font-size:14px">延期需求数</span>
                                 </div>
-                                <div style="display:flex;margin-top:20px;">
+                                <div style="display:flex;">
+                                    <span style="color:#5f6e82;font-size:14px">
+                                        {{kg_starttime}} | {{kg_endtime}}    
+                                    </span>
+                                </div>
+                                <div style="display:flex;">
+                                    <span style="font-size:30px">
+                                        {{kg_issue_pie.delay}}
+                                    </span>
+                                    <span style="color:#5f6e82;font-size:14px;height: 20px;margin-top: 17px;">
+                                        个
+                                    </span>
+                                </div>
+                                <div style="display:flex">
                                     <el-progress
                                         style="flex: 0 0 100%"
                                         :text-inside="true"
                                         :stroke-width="24"
                                         :percentage="kg_issue_pie.delay_percentage"
                                         status="exception"
+                                        color=" #f89898"
                                         />
                                 </div>
-                            </el-card>
-                            </el-col>
-                            <el-col :span="6" class="card_css">
-                            <el-card shadow="always" style="display:flex;flex-direction:column">
-                                <div style="display:flex">
-                                    <span>需求取消数数:</span>
-                                    <span>{{kg_issue_pie.cancel}}</span>
+                            </div>
+                            <div class="box" style="height:140px;">
+                                <div style="display:flex;">
+                                    <span style="color:#5f6e82;font-size:14px">取消需求数</span>
                                 </div>
-                                <div style="display:flex;margin-top:20px">
+                                <div style="display:flex;">
+                                    <span style="color:#5f6e82;font-size:14px">
+                                        {{kg_starttime}} | {{kg_endtime}}    
+                                    </span>
+                                </div>
+                                <div style="display:flex;">
+                                    <span style="font-size:30px">
+                                        {{kg_issue_pie.cancel}}
+                                    </span>
+                                    <span style="color:#5f6e82;font-size:14px;height: 20px;margin-top: 17px;">
+                                        个
+                                    </span>
+                                </div>
+                                <div style="display:flex">
                                     <el-progress
                                         style="flex: 0 0 100%"
                                         :text-inside="true"
                                         :stroke-width="24"
                                         :percentage="kg_issue_pie.cancel_percentage"
                                         status="warning"
+                                        color=" #eebe77"
                                         />
                                 </div>
-                            </el-card>
-                            </el-col>
-                            <el-col :span="6" class="card_css">
-                            <el-card shadow="always" style="display:flex;flex-direction:column">
-                                <div style="display:flex">
-                                    <span>进行中的需求:</span>
-                                    <span>{{kg_issue_pie.ongoing}}</span>
+                            </div>
+                            <div class="box" style="height:140px;">
+                                <div style="display:flex;">
+                                    <span style="color:#5f6e82;font-size:14px">进行中的需求</span>
                                 </div>
-                                <div style="display:flex;margin-top:20px">
+                                <div style="display:flex;">
+                                    <span style="color:#5f6e82;font-size:14px">
+                                        {{kg_starttime}} | {{kg_endtime}}    
+                                    </span>
+                                </div>
+                                <div style="display:flex;">
+                                    <span style="font-size:30px">
+                                        {{kg_issue_pie.ongoing}}
+                                    </span>
+                                    <span style="color:#5f6e82;font-size:14px;height: 20px;margin-top: 17px;">
+                                        个
+                                    </span>
+                                </div>
+                                <div style="display:flex;">
                                     <el-progress
                                         style="flex: 0 0 100%"
                                         :text-inside="true"
                                         :stroke-width="24"
                                         :percentage="kg_issue_pie.ongoing_percentage"
+                                        
+                                        color=" #79bbff"
                                         />
                                 </div>
-                            </el-card>
-                            </el-col>
+                            </div>
                            
                         </el-row>
                         <div style="flex: 0 0 2%"></div>
-                        <div style="height:400px;min-height:400px;padding:20px;flex: 0 0 53%;box-shadow:0px -5px 5px #88888830,-5px 0px 5px #88888830,5px 0px 5px #88888830,0px 5px 5px #88888830;" id="kg_echars_1"></div>
+                        <div style="height:400px;min-height:400px;padding:20px;flex: 0 0 48%;box-shadow:0px -5px 5px #88888830,-5px 0px 5px #88888830,5px 0px 5px #88888830,0px 5px 5px #88888830;" id="kg_echars_1"></div>
                     </div>
                     <el-divider content-position="left">Annual statistics</el-divider>
                     <div style="display:flex;">
-                        <div style="flex:0 0 100%;height:400px;padding:20px;min-height:400px;box-shadow:0px -5px 5px #88888830,-5px 0px 5px #88888830,5px 0px 5px #88888830,0px 5px 5px #88888830;" id="kg_echars_2"></div>
+                        <div style="width:100%;height:400px;padding:20px;min-height:400px;box-shadow:0px -5px 5px #88888830,-5px 0px 5px #88888830,5px 0px 5px #88888830,0px 5px 5px #88888830;" id="kg_echars_2"></div>
                     </div>
                     <el-divider content-position="left">Histogram</el-divider>
                     <div style="display:flex;">
-                        <div style="flex:0 0 100%;height:400px;min-height:400px;box-shadow:0px -5px 5px #88888830,-5px 0px 5px #88888830,5px 0px 5px #88888830,0px 5px 5px #88888830;" id="kg_echars_3"></div>
+                        <div style="width:100%;height:400px;min-height:400px;padding:20px;box-shadow:0px -5px 5px #88888830,-5px 0px 5px #88888830,5px 0px 5px #88888830,0px 5px 5px #88888830;" id="kg_echars_3"></div>
                     </div>
+                    <el-divider content-position="left">Bug Info</el-divider>
+                    <div style="display:flex">
+                        <el-row style="flex:0 0 50%;display:flex;flex-wrap: wrap;box-shadow:0px -5px 5px #88888830,-5px 0px 5px #88888830,5px 0px 5px #88888830,0px 5px 5px #88888830;"> 
+                            <div class="box">
+                                <div style="display:flex;">
+                                    <span style="color:#5f6e82;font-size:14px">BUG总数</span>
+                                </div>
+                                <div style="display:flex;">
+                                    <span style="color:#5f6e82;font-size:14px">
+                                        {{kg_starttime}} | {{kg_endtime}}    
+                                    </span>
+                                </div>
+                                <div style="display:flex;">
+                                    <div @click="kg_bug_table_check('kg_member_bugdata_all','sum_list')" style="font-size:30px;cursor:pointer;" class="kg_bug_stageinfo_title">
+                                        {{kg_member_bugdata_all["sum"]}}
+                                    </div>
+                                    <span style="color:#5f6e82;font-size:14px;height: 20px;margin-top: 17px;">
+                                        个
+                                    </span>
+                                </div>
+                                <div style="display:flex;">                                    
+                                    <span @click="kg_bug_table_check('kg_member_bugdata_all','fatal_list')" class="kg_bug_stageinfo">
+                                        S:{{kg_member_bugdata_all["fatal"]}}&nbsp
+                                    </span>
+                                    <span @click="kg_bug_table_check('kg_member_bugdata_all','serious_list')" class="kg_bug_stageinfo">
+                                        A:{{kg_member_bugdata_all["serious"]}}&nbsp
+                                    </span>
+                                    <span @click="kg_bug_table_check('kg_member_bugdata_all','normal_list')" class="kg_bug_stageinfo">
+                                        B:{{kg_member_bugdata_all["normal"]}}&nbsp
+                                    </span>
+                                    <span @click="kg_bug_table_check('kg_member_bugdata_all','prompt_list')" class="kg_bug_stageinfo">
+                                        C:{{kg_member_bugdata_all["prompt"]}}&nbsp
+                                    </span>
+                                    <span @click="kg_bug_table_check('kg_member_bugdata_all','advice_list')" class="kg_bug_stageinfo">
+                                        D:{{kg_member_bugdata_all["advice"]}}&nbsp
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="box">
+                                <div style="display:flex;">
+                                    <span style="color:#5f6e82;font-size:14px">新增BUG数</span>
+                                </div>
+                                <div style="display:flex;">
+                                    <span style="color:#5f6e82;font-size:14px">
+                                        {{kg_starttime}} | {{kg_endtime}}    
+                                    </span>
+                                </div>
+                                <div style="display:flex;">
+                                    <span @click="kg_bug_table_check('kg_member_bugdata_add','sum_list')" style="font-size:30px;cursor:pointer;" class="kg_bug_stageinfo_title">
+                                        {{kg_member_bugdata_add["sum"]}}
+                                    </span>
+                                    <span style="color:#5f6e82;font-size:14px;height: 20px;margin-top: 17px;">
+                                        个
+                                    </span>
+                                </div>
+                                <div style="display:flex;">
+                                    <span @click="kg_bug_table_check('kg_member_bugdata_add','fatal_list')" class="kg_bug_stageinfo">
+                                        S:{{kg_member_bugdata_add["fatal"]}}&nbsp
+                                    </span>
+                                    <span @click="kg_bug_table_check('kg_member_bugdata_add','serious_list')" class="kg_bug_stageinfo">
+                                        A:{{kg_member_bugdata_add["serious"]}}&nbsp
+                                    </span>
+                                    <span @click="kg_bug_table_check('kg_member_bugdata_add','normal_list')" class="kg_bug_stageinfo">
+                                        B:{{kg_member_bugdata_add["normal"]}}&nbsp
+                                    </span>
+                                    <span @click="kg_bug_table_check('kg_member_bugdata_add','prompt_list')" class="kg_bug_stageinfo">
+                                        C:{{kg_member_bugdata_add["prompt"]}}&nbsp
+                                    </span>
+                                    <span @click="kg_bug_table_check('kg_member_bugdata_add','advice_list')" class="kg_bug_stageinfo">
+                                        D:{{kg_member_bugdata_add["advice"]}}&nbsp
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="box">
+                                <div style="display:flex;">
+                                    <span style="color:#5f6e82;font-size:14px">遗留BUG数(包含挂起)</span>
+                                </div>
+                                <div style="display:flex;">
+                                    <span style="color:#5f6e82;font-size:14px">
+                                        {{kg_starttime}} | {{kg_endtime}}    
+                                    </span>
+                                </div>
+                                <div style="display:flex;">
+                                    <div @click="kg_bug_table_check('kg_member_bugdata_delay','sum_list')" style="font-size:30px;cursor:pointer;" class="kg_bug_stageinfo_title">
+                                        {{kg_member_bugdata_delay["sum"]}}
+                                    </div>
+                                    <span style="color:#5f6e82;font-size:14px;height: 20px;margin-top: 17px;">
+                                        个
+                                    </span>
+                                </div>
+                                <div style="display:flex;">
+                                    <div @click="kg_bug_table_check('kg_member_bugdata_delay','fatal_list')" class="kg_bug_stageinfo">
+                                        S:{{kg_member_bugdata_delay["fatal"]}}&nbsp
+                                    </div>
+                                    <span @click="kg_bug_table_check('kg_member_bugdata_delay','serious_list')" class="kg_bug_stageinfo">
+                                        A:{{kg_member_bugdata_delay["serious"]}}&nbsp
+                                    </span>
+                                    <span @click="kg_bug_table_check('kg_member_bugdata_delay','normal_list')" class="kg_bug_stageinfo">
+                                        B:{{kg_member_bugdata_delay["normal"]}}&nbsp
+                                    </span>
+                                    <span @click="kg_bug_table_check('kg_member_bugdata_delay','prompt_list')" class="kg_bug_stageinfo">
+                                        C:{{kg_member_bugdata_delay["prompt"]}}&nbsp
+                                    </span>
+                                    <span @click="kg_bug_table_check('kg_member_bugdata_delay','advice_list')" class="kg_bug_stageinfo">
+                                        D:{{kg_member_bugdata_delay["advice"]}}&nbsp
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="box">
+                                <div style="display:flex;">
+                                    <span style="color:#5f6e82;font-size:14px">关闭BUG数</span>
+                                </div>
+                                <div style="display:flex;">
+                                    <span style="color:#5f6e82;font-size:14px">
+                                        {{kg_starttime}} | {{kg_endtime}}    
+                                    </span>
+                                </div>
+                                <div style="display:flex;">
+                                    <span @click="kg_bug_table_check('kg_member_bugdata_close','sum_list')" style="font-size:30px;cursor:pointer;" class="kg_bug_stageinfo_title">
+                                        {{kg_member_bugdata_close["sum"]}}
+                                    </span>
+                                    <span style="color:#5f6e82;font-size:14px;height: 20px;margin-top: 17px;">
+                                        个
+                                    </span>
+                                </div>
+                                <div style="display:flex;">
+                                    <span @click="kg_bug_table_check('kg_member_bugdata_close','fatal_list')" class="kg_bug_stageinfo">
+                                        S:{{kg_member_bugdata_close["fatal"]}}&nbsp
+                                    </span>
+                                    <span @click="kg_bug_table_check('kg_member_bugdata_close','serious_list')" class="kg_bug_stageinfo">
+                                        A:{{kg_member_bugdata_close["serious"]}}&nbsp
+                                    </span>
+                                    <span @click="kg_bug_table_check('kg_member_bugdata_close','normal_list')" class="kg_bug_stageinfo">
+                                        B:{{kg_member_bugdata_close["normal"]}}&nbsp
+                                    </span>
+                                    <span @click="kg_bug_table_check('kg_member_bugdata_close','prompt_list')" class="kg_bug_stageinfo">
+                                        C:{{kg_member_bugdata_close["prompt"]}}&nbsp
+                                    </span>
+                                    <span @click="kg_bug_table_check('kg_member_bugdata_close','advice_list')" class="kg_bug_stageinfo">
+                                        D:{{kg_member_bugdata_close["advice"]}}&nbsp
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="box">
+                                <div style="display:flex;">
+                                    <span style="color:#5f6e82;font-size:14px">BUG回归失败</span>
+                                </div>
+                                <div style="display:flex;">
+                                    <span style="color:#5f6e82;font-size:14px">
+                                        {{kg_starttime}} | {{kg_endtime}}    
+                                    </span>
+                                </div>
+                                <div style="display:flex;">
+                                    <span @click="kg_bug_table_check('kg_member_bugdata_return','sum_list')" style="font-size:30px;cursor:pointer;" class="kg_bug_stageinfo_title">
+                                        {{kg_member_bugdata_return["sum"]}}
+                                    </span>
+                                    <span style="color:#5f6e82;font-size:14px;height: 20px;margin-top: 17px;">
+                                        个
+                                    </span>
+                                </div>
+                                <div style="display:flex;">
+                                    <div style="display:flex;">
+                                        <span @click="kg_bug_table_check('kg_member_bugdata_return','fatal_list')" class="kg_bug_stageinfo">
+                                            S:{{kg_member_bugdata_return["fatal"]}}&nbsp
+                                        </span>
+                                        <span @click="kg_bug_table_check('kg_member_bugdata_return','serious_list')" class="kg_bug_stageinfo">
+                                            A:{{kg_member_bugdata_return["serious"]}}&nbsp
+                                        </span>
+                                        <span @click="kg_bug_table_check('kg_member_bugdata_return','normal_list')" class="kg_bug_stageinfo">
+                                            B:{{kg_member_bugdata_return["normal"]}}&nbsp
+                                        </span>
+                                        <span @click="kg_bug_table_check('kg_member_bugdata_return','prompt_list')" class="kg_bug_stageinfo">
+                                            C:{{kg_member_bugdata_return["prompt"]}}&nbsp
+                                        </span>
+                                        <span @click="kg_bug_table_check('kg_member_bugdata_return','advice_list')" class="kg_bug_stageinfo">
+                                            D:{{kg_member_bugdata_return["advice"]}}&nbsp
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="box">
+                                <div style="display:flex;">
+                                    <span style="color:#5f6e82;font-size:14px">BUG重启</span>
+                                </div>
+                                <div style="display:flex;">
+                                    <span style="color:#5f6e82;font-size:14px">
+                                        {{kg_starttime}} | {{kg_endtime}}    
+                                    </span>
+                                </div>
+                                <div style="display:flex;">
+                                    <span @click="kg_bug_table_check('kg_member_bugdata_restart','sum_list')" style="font-size:30px;cursor:pointer;" class="kg_bug_stageinfo_title">
+                                        {{kg_member_bugdata_restart["sum"]}}
+                                    </span>
+                                    <span style="color:#5f6e82;font-size:14px;height: 20px;margin-top: 17px;">
+                                        个
+                                    </span>
+                                </div>
+                                <div style="display:flex;">
+                                    <span @click="kg_bug_table_check('kg_member_bugdata_restart','fatal_list')" class="kg_bug_stageinfo">
+                                        S:{{kg_member_bugdata_restart["fatal"]}}&nbsp
+                                    </span>
+                                    <span @click="kg_bug_table_check('kg_member_bugdata_restart','serious_list')" class="kg_bug_stageinfo">
+                                        A:{{kg_member_bugdata_restart["serious"]}}&nbsp
+                                    </span>
+                                    <span @click="kg_bug_table_check('kg_member_bugdata_restart','normal_list')" class="kg_bug_stageinfo">
+                                        B:{{kg_member_bugdata_restart["normal"]}}&nbsp
+                                    </span>
+                                    <span @click="kg_bug_table_check('kg_member_bugdata_restart','prompt_list')" class="kg_bug_stageinfo">
+                                        C:{{kg_member_bugdata_restart["prompt"]}}&nbsp
+                                    </span>
+                                    <span @click="kg_bug_table_check('kg_member_bugdata_restart','advice_list')" class="kg_bug_stageinfo">
+                                        D:{{kg_member_bugdata_restart["advice"]}}&nbsp
+                                    </span>
+                                </div>
+                            </div>
+           
+                           
+                        </el-row>
+                        <div style="flex: 0 0 2%"></div>
+                        <div style="height:400px;min-height:400px;padding:20px;flex: 0 0 48%;box-shadow:0px -5px 5px #88888830,-5px 0px 5px #88888830,5px 0px 5px #88888830,0px 5px 5px #88888830;" id="kg_echars_4"></div>
+                        
+                    </div>
+                    <!-- <el-button @click="kg_test()">test</el-button> -->
+                    <div id="kg_titleid" v-show="kg_titleshow">
+                        <el-divider content-position="left" style="cursor:pointer" @click="kg_test()">Shanghai Data Comparison <el-icon><Switch /></el-icon></el-divider>
+
+                    
+                    
+                    <div style="display:flex">
+                        <el-row style="flex:0 0 50%;display:flex;flex-wrap: wrap;box-shadow:0px -5px 5px #88888830,-5px 0px 5px #88888830,5px 0px 5px #88888830,0px 5px 5px #88888830;"> 
+                           
+                                <div style="width: 100%;;height:400px;min-height:400px;padding:20px" id="kg_echars_5"></div>
+                         
+                       
+                        </el-row>
+                        <div style="flex: 0 0 2%"></div>
+                        <el-row style="flex:0 0 48%;display:flex;flex-wrap: wrap;box-shadow:0px -5px 5px #88888830,-5px 0px 5px #88888830,5px 0px 5px #88888830,0px 5px 5px #88888830;"> 
+                            
+                            <div style="width: 100%;height:400px;min-height:400px;padding:20px" id="kg_echars_6"></div>
+                               
+                               
+                        </el-row>
+                    </div>
+                    
+                    <el-divider content-position="left" ><span>Shenzhen Data comparison</span> </el-divider>
+                    <div style="display:flex">
+                        <el-row style="flex:0 0 50%;display:flex;flex-wrap: wrap;box-shadow:0px -5px 5px #88888830,-5px 0px 5px #88888830,5px 0px 5px #88888830,0px 5px 5px #88888830;"> 
+                           
+                                <div style="width: 100%;;height:400px;min-height:400px;padding:20px" id="kg_echars_7"></div>
+                         
+                       
+                        </el-row>
+                        <div style="flex: 0 0 2%"></div>
+                        <el-row style="flex:0 0 48%;display:flex;flex-wrap: wrap;box-shadow:0px -5px 5px #88888830,-5px 0px 5px #88888830,5px 0px 5px #88888830,0px 5px 5px #88888830;"> 
+                            
+                            <div style="width: 100%;height:400px;min-height:400px;padding:20px" id="kg_echars_8"></div>
+                               
+                               
+                        </el-row>
+                    </div>
+                </div>
+                <div id="kg_titleid_all" v-show="kg_titleshow_all">
+                    <el-divider content-position="left" style="cursor:pointer" @click="kg_test()">Shenzhen|Shanghai Data Comparison <el-icon><Switch /></el-icon></el-divider>
+                    <div style="display:flex;width: 100%;">
+                        <el-row style="flex:0 0 50%;display:flex;flex-wrap: wrap;box-shadow:0px -5px 5px #88888830,-5px 0px 5px #88888830,5px 0px 5px #88888830,0px 5px 5px #88888830;"> 
+                           
+                                <div style="width: 100%;;height:400px;min-height:400px;padding:20px" id="kg_echars_9"></div>
+                         
+                       
+                        </el-row>
+                        <div style="flex: 0 0 2%"></div>
+                        <el-row style="flex:0 0 48%;display:flex;flex-wrap: wrap;box-shadow:0px -5px 5px #88888830,-5px 0px 5px #88888830,5px 0px 5px #88888830,0px 5px 5px #88888830;"> 
+                            
+                            <div style="width: 100%;height:400px;min-height:400px;padding:20px" id="kg_echars_10"></div>
+                               
+                               
+                        </el-row>
+                    </div>
+                </div>
                 </div>
     
             </el-card>
             </div>
+            <el-dialog
+                :lock-scroll="true"
+                v-model="kg_dialogVisible"
+                width="70%"
+                :modal="false"
+                style="margin-left:20%;min-height:700px;height:700px;display:flex;flex-direction: column;"
+
+            >
+                <div style="width:200px;float:left;margin-left:20px">
+                    <el-input
+                    v-model="kg_bugtable_input"
+                    placeholder="请输入搜索内容"
+                    @keyup.enter.native="kg_handleEnterKeyFilter()"
+                    />   
+                </div>
+                <el-table :data="kg_bugtableData" stripe style="min-height: 440px;height:440px;width:97%;margin:40px 20px 20px 20px">
+                    <el-table-column label="#" prop="list_id" width="50"/>
+                    <el-table-column prop="id" label="ID" width="100"/>
+                    <el-table-column prop="title" label="标题" width="700"/>
+                    <el-table-column prop="severity_name" label="严重程度" width="100"/>
+                    <el-table-column prop="reporter" label="创始人" width="100"/>
+                    <el-table-column prop="created" label="开始时间" width="200"/>
+                    <el-table-column prop="closed" label="结束时间" width="200"/>
+                    <el-table-column prop="status_name" label="状态" width="100"/>
+                    <el-table-column fixed="right" label="详情" width="50">
+                        <template #default="scope">
+                            <el-button
+                            link
+                            type="primary"
+                            size="small"
+                            @click.prevent="kg_deleteRow(scope.row)"
+                            >
+                            <span>查看</span>
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <div style="margin-top:50px;display:flex;align-items:center;">
+                    
+                    <el-pagination
+                    style="align-items:center;"
+                    :page-size="10"
+                    :current-page="kg_bug_current_page"
+                    layout="total, prev, pager, next"
+                    :total=kg_bug_list_cache_length
+                    @size-change="kg_bughandleSizeChange"
+                    @current-change="kg_bughandleCurrentChange"
+                    />
+                </div>
+          
+            </el-dialog>
         </div>
+            
         <!-- 综合考评页面 -->
         <div v-show="titleshow3">
             综合考评
@@ -581,7 +969,7 @@
     import { reactive, toRefs } from '@vue/reactivity'
     import {onMounted, onUpdated} from "vue"
     import {hgaxios as axios} from "../../utils/request"
-    import { ElMessage } from 'element-plus'
+    import { ElMessage,ElMessageBox } from 'element-plus'
     // import { isDark } from '~/composables/dark'
     import { setup } from 'xe-utils/ctor'
     import {useStore} from 'vuex'
@@ -600,13 +988,30 @@
                         kg_datetime:"",
                         kg_show:false,
                         kg_tag:false,
+                        kg_dialogVisible:false,
+                        kg_bugtable_input:"",
                         kg_starttime:"",
                         kg_endtime:"",
                         kg_data_list:[],
                         kg_member_info:{},
+                        kg_member_bugdata:{},
+                        kg_member_bugdata_all:{},
+                        kg_member_bugdata_add:{},
+                        kg_member_bugdata_delay:{},
+                        kg_member_bugdata_close:{},
+                        kg_member_bugdata_return:{},
+                        kg_member_bugdata_restart:{},
+                        kg_bug_list_cache:[],
+                        kg_bug_list_cache_length:"",
+                        kg_bug_current_page:1,
+                        kg_bug_info_list:"",
+                        kg_bug_info_name:"",
+                        kg_titleshow:true,
+                        kg_titleshow_all:true,
                         kg_issue_pie:{
                          
                         },
+                        kg_bugtableData:[],
                         kg_echars1_data:{
                             title: {
                                 text: '个人需求统计图',
@@ -620,9 +1025,10 @@
                                 orient: 'vertical',
                                 left: 'left'
                             },
+                            // color:["#79bbff","#529b2e90","#eebe77","#f89898"],
                             series: [
                                 {
-                                name: 'Access From',
+                                name: '需求图',
                                 type: 'pie',
                                 radius: '70%',
                                 data: [
@@ -631,7 +1037,7 @@
                                 label: {
                                     normal: {
                                         show: true,
-                                        formatter: '{b}: {c}({d}%)'
+                                        formatter: '{b}: {c}'
                                     }
                                 },
                                 emphasis: {
@@ -654,6 +1060,26 @@
                                 }
                                 }
                             },
+                            dataZoom: [
+                                {
+                                    orient: "horizontal",
+                                    show: true,//控制滚动条显示隐藏
+                                    realtime: true, //拖动滚动条时是否动态的更新图表数据
+                                    height: 15, //滚动条高度
+                                    start: 0, //滚动条开始位置（共100等份）
+                                    end: 70,//滚动条结束位置
+                                    top:353,
+                              
+                                    zoomLock: false, //控制面板是否进行缩放
+                                },
+                                // {
+                                //     type: 'inside',
+                                //     brushSelect: true,
+                                //     start: 0,
+                                //     end: 10,
+                                //     xAxisIndex: [0],
+                                // }
+                                ],
                             grid: {
                                 top: '50px',
                                 left: '1%',
@@ -699,53 +1125,117 @@
                             series: [
                                 {
                                 name: '需求总数',
+                                
                                 type: 'bar',
-                                barWidth : 50,
+                                barWidth : 40,
+                                itemStyle:{
+                                    normal:{
+                                        color:' #95d475'
+                                    },
+                                },
+                                
+                                label: {
+                                    show: true,
+                                    position: 'inside'
+                                },
                                 tooltip: {
                                     valueFormatter: function (value) {
                                     return value + ' 个';
                                     }
                                 },
                                 data: [
-                                    50,70,100,50,20,30
+                                   
                                 ]
                                 },
                                 {
                                 name: '需求延迟数',
                                 type: 'bar',
-                                barWidth : 40,
+                                itemStyle:{
+                                    normal:{
+                                        color:' #f89898'
+                                    }
+                                },
+                                barWidth : 25,
                                 tooltip: {
                                     valueFormatter: function (value) {
                                     return value + '个';
                                     }
                                 },
+                                label: {
+                                    show: true,
+                                    position: 'inside'
+                                },
                                 data: [
-                                    1,2,4,5,6,3,5
+                                   
                                 ]
                                 },
                                 {
                                 name: '需求分数',
                                 type: 'line',
                                 yAxisIndex: 1,
+                                itemStyle:{
+                                    normal:{
+                                        color:' #79bbff'
+                                    }
+                                },
+                                label: {
+                                    show: true,
+                                    position: 'inside'
+                                },
                                 tooltip: {
                                     valueFormatter: function (value) {
                                     return value + '分';
                                     }
                                 },
-                                data: [50,70,20,54,60,29,60]
+                                data: []
                                 }
                             ]
                             },
                         kg_echars3_data:{
+                            title: {
+                                text: '成员名下需求数量',
+                               
+                                top:"10px",
+                                left: '10px'
+                            },
+                            tooltip: {
+                                trigger: 'axis',
+                                axisPointer: {
+                                type: 'shadow'
+                                }
+                            },
+                            dataZoom: [
+                                {
+                                    orient: "horizontal",
+                                    show: true,//控制滚动条显示隐藏
+                                    realtime: true, //拖动滚动条时是否动态的更新图表数据
+                                    height: 15, //滚动条高度
+                                    start: 0, //滚动条开始位置（共100等份）
+                                    end: 50,//滚动条结束位置
+                                    top:353,
+                                    zoomLock: false, //控制面板是否进行缩放
+                                },
+                                // {
+                                //     type: 'inside',
+                                //     brushSelect: true,
+                                //     start: 0,
+                                //     end: 10,
+                                //     xAxisIndex: [0],
+                                // }
+                                ],
+                            label: {
+                                    show: true,
+                                    position: 'inside'
+                                },
                             xAxis: {
                                 type: 'category',
-                                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                                data: []
                             },
                             yAxis: {
                                 type: 'value'
                             },
                             grid: {
-                                top: '50px',
+                                top: '100px',
                                 left: '1%',
                                 right: '1%',
                                 bottom: '3%',
@@ -753,9 +1243,10 @@
                             },
                             series: [
                                 {
-                                data: [120, 200, 150, 80, 70, 110, 130],
+                                data: [],
                                 type: 'bar',
-                                barWidth : 50,
+                                barGap:'2%',
+                                barWidth : 30,
                                 itemStyle:{
                                     normal:{
                                         color:' #79bbff'
@@ -764,10 +1255,450 @@
                                 }
                             ]
                             },
-                        kg_echars4_data:{}
+                        kg_echars4_data:{
+                            title: {
+                                text: '个人BUG统计图',
+                               
+                                left: 'center'
+                            },
+                            tooltip: {
+                                trigger: 'item'
+                            },
+                            // color:[" #eebe77","#f89898"," #79bbff"," #337ecc"," #95d475"],
+                            legend: {
+                                top: '5%',
+                                orient: 'vertical',
+                                left: 'left'
+                            },
+                            series: [
+                                {
+                                name: 'BUG',
+                                type: 'pie',
+                                
+                                radius: ['40%', '70%'],
+                                avoidLabelOverlap: false,
+                                label: {
+                                    normal: {
+                                        show: true,
+                                        formatter: '{b}: {c}'
+                                    },
+                                    show: false,
+                                    position: 'center'
+                                },
+                               
+                                labelLine: {
+                                    show: false
+                                },
+                                data: [
+                                   
+                                ]
+                                }
+                            ]
+                        },
+                        kg_echars5_data:{
+                            title: {
+                                text: '成员名下需求统计(上海)',
+                                subtext:"",
+                                top:"10px",
+                                left: '10px'
+                            },
+                            tooltip: {
+                                trigger: 'item',
+                                
+                                formatter:'{c}%',
+                                axisPointer: {
+                                type: 'shadow'
+                                }
+                            },
+                            
+                            dataZoom: [
+                                {
+                                    orient: "horizontal",
+                                    show: true,//控制滚动条显示隐藏
+                                    realtime: true, //拖动滚动条时是否动态的更新图表数据
+                                    height: 15, //滚动条高度
+                                    start: 0, //滚动条开始位置（共100等份）
+                                    end: 50,//滚动条结束位置
+                                    top:353,
+                                    zoomLock: true, //控制面板是否进行缩放
+                                },
+                                {
+                                    type: 'inside',
+                                    brushSelect: true,
+                                    start: 0,
+                                    end: 10,
+                                    xAxisIndex: [0],
+                                }
+                                ],
+                            label: {
+                                    show: true,
+                                    position: 'top',
+                                    formatter: '{b}\n{c}%'
+                                },
+                            xAxis: {
+                                type: 'category',
+                                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun','Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun','Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                            },
+                            yAxis: {
+                                type: 'value'
+                            },
+                            grid: {
+                                top: '100px',
+                                left: '1%',
+                                right: '1%',
+                                bottom: '3%',
+                                containLabel: true
+                            },
+                            series: [
+                                {
+                                data:  [120, 200, 150, 80, 70, 110, 130,120, 200, 150, 80, 70, 110, 130,150, 80, 70, 110, 130],
+                                type: 'bar',
+                                barGap:'2%',
+                                barWidth : 30,
+                                itemStyle:{
+                                    normal:{
+                                        color:'#79bbff'
+                                    }
+                                },
+                                }
+                            ]
+                        },
+                        kg_echars6_data:{
+                            title: {
+                                text: '成员bug提交统计(上海)',
+                                subtext:'',
+                                top:"10px",
+                                left: '10px'
+                            },
+                            dataZoom: [
+                                {
+                                    orient: "horizontal",
+                                    show: true,//控制滚动条显示隐藏
+                                    realtime: true, //拖动滚动条时是否动态的更新图表数据
+                                    height: 15, //滚动条高度
+                                    start: 0, //滚动条开始位置（共100等份）
+                                    end: 50,//滚动条结束位置
+                                    top:353,
+                                    zoomLock: true, //控制面板是否进行缩放
+                                },
+                                {
+                                    type: 'inside',
+                                    brushSelect: true,
+                                    start: 0,
+                                    end: 10,
+                                    xAxisIndex: [0],
+                                }
+                                ],
+                            tooltip: {
+                                trigger: 'item',
+                                formatter:'{c}%',
+                                axisPointer: {
+                                type: 'shadow'
+                                }
+                            },
+                            label: {
+                                    show: true,
+                                    position: 'top',
+                                    formatter: '{b}\n{c}%'
+                                },
+                            xAxis: {
+                                type: 'category',
+                                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                            },
+                            yAxis: {
+                                type: 'value'
+                            },
+                            grid: {
+                                top: '100px',
+                                left: '1%',
+                                right: '1%',
+                                bottom: '3%',
+                                containLabel: true
+                            },
+                            series: [
+                                {
+                                data:  [120, 200, 150, 80, 70, 110, 130],
+                                type: 'bar',
+                                barGap:'2%',
+                                barWidth : 30,
+                                itemStyle:{
+                                    normal:{
+                                        color:' #79bbff'
+                                    }
+                                },
+                                }
+                            ]
+                        },
+                        kg_echars7_data:{
+                            title: {
+                                text: '成员名下需求统计(深圳)',
+                                subtext:'',
+                                top:"10px",
+                                left: '10px'
+                            },
+                            tooltip: {
+                                trigger: 'item',
+                                
+                                formatter:'{c}%',
+                                axisPointer: {
+                                type: 'shadow'
+                                }
+                            },
+                            
+                            dataZoom: [
+                                {
+                                    orient: "horizontal",
+                                    show: true,//控制滚动条显示隐藏
+                                    realtime: true, //拖动滚动条时是否动态的更新图表数据
+                                    height: 15, //滚动条高度
+                                    start: 0, //滚动条开始位置（共100等份）
+                                    end: 100,//滚动条结束位置
+                                    top:353,
+                                    zoomLock: true, //控制面板是否进行缩放
+                                },
+                                {
+                                    type: 'inside',
+                                    brushSelect: true,
+                                    start: 0,
+                                    end: 10,
+                                    xAxisIndex: [0],
+                                }
+                                ],
+                            label: {
+                                    show: true,
+                                    position: 'top',
+                                    formatter: '{b}\n{c}%'
+                                },
+                            xAxis: {
+                                type: 'category',
+                                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun','Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun','Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                            },
+                            yAxis: {
+                                type: 'value'
+                            },
+                            grid: {
+                                top: '100px',
+                                left: '1%',
+                                right: '1%',
+                                bottom: '3%',
+                                containLabel: true
+                            },
+                            series: [
+                                {
+                                data:  [120, 200, 150, 80, 70, 110, 130,120, 200, 150, 80, 70, 110, 130,150, 80, 70, 110, 130],
+                                type: 'bar',
+                                barGap:'2%',
+                                barWidth : 30,
+                                itemStyle:{
+                                    normal:{
+                                        color:'#79bbff'
+                                    }
+                                },
+                                }
+                            ]
+                        },
+                        kg_echars8_data:{
+                            title: {
+                                text: '成员bug提交统计(深圳)',
+                                subtext:'',
+                                top:"10px",
+                                left: '10px'
+                            },
+                            dataZoom: [
+                                {
+                                    orient: "horizontal",
+                                    show: true,//控制滚动条显示隐藏
+                                    realtime: true, //拖动滚动条时是否动态的更新图表数据
+                                    height: 15, //滚动条高度
+                                    start: 0, //滚动条开始位置（共100等份）
+                                    end: 100,//滚动条结束位置
+                                    top:353,
+                                    zoomLock: true, //控制面板是否进行缩放
+                                },
+                                {
+                                    type: 'inside',
+                                    brushSelect: true,
+                                    start: 0,
+                                    end: 10,
+                                    xAxisIndex: [0],
+                                }
+                                ],
+                            tooltip: {
+                                trigger: 'item',
+                                formatter:'{c}%',
+                                axisPointer: {
+                                type: 'shadow'
+                                }
+                            },
+                            label: {
+                                    show: true,
+                                    position: 'top',
+                                    formatter: '{b}\n{c}%'
+                                },
+                            xAxis: {
+                                type: 'category',
+                                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                            },
+                            yAxis: {
+                                type: 'value'
+                            },
+                            grid: {
+                                top: '100px',
+                                left: '1%',
+                                right: '1%',
+                                bottom: '3%',
+                                containLabel: true
+                            },
+                            series: [
+                                {
+                                data:  [120, 200, 150, 80, 70, 110, 130],
+                                type: 'bar',
+                                barGap:'2%',
+                                barWidth : 30,
+                                itemStyle:{
+                                    normal:{
+                                        color:' #79bbff'
+                                    }
+                                },
+                                }
+                            ]
+                        },
+                        kg_echars10_data:{
+                            title: {
+                                text: '成员bug提交统计(深圳|上海)',
+                                subtext:'',
+                                top:"10px",
+                                left: '10px'
+                            },
+                            dataZoom: [
+                                {
+                                    orient: "horizontal",
+                                    show: true,//控制滚动条显示隐藏
+                                    realtime: true, //拖动滚动条时是否动态的更新图表数据
+                                    height: 15, //滚动条高度
+                                    start: 0, //滚动条开始位置（共100等份）
+                                    end: 50,//滚动条结束位置
+                                    top:353,
+                                    zoomLock: true, //控制面板是否进行缩放
+                                },
+                                {
+                                    type: 'inside',
+                                    brushSelect: true,
+                                    start: 0,
+                                    end: 10,
+                                    xAxisIndex: [0],
+                                }
+                                ],
+                            tooltip: {
+                                trigger: 'item',
+                                formatter:'{c}%',
+                                axisPointer: {
+                                type: 'shadow'
+                                }
+                            },
+                            label: {
+                                    show: true,
+                                    position: 'top',
+                                    formatter: '{b}\n{c}%'
+                                },
+                            xAxis: {
+                                type: 'category',
+                                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                            },
+                            yAxis: {
+                                type: 'value'
+                            },
+                            grid: {
+                                top: '100px',
+                                left: '1%',
+                                right: '1%',
+                                bottom: '3%',
+                                containLabel: true
+                            },
+                            series: [
+                                {
+                                data:  [120, 200, 150, 80, 70, 110, 130],
+                                type: 'bar',
+                                barGap:'2%',
+                                barWidth : 30,
+                                itemStyle:{
+                                    normal:{
+                                        color:' #79bbff'
+                                    }
+                                },
+                                }
+                            ]
+                        },
+                        kg_echars9_data:{
+                            title: {
+                                text: '成员bug提交统计(深圳|上海)',
+                                subtext:'',
+                                top:"10px",
+                                left: '10px'
+                            },
+                            dataZoom: [
+                                {
+                                    orient: "horizontal",
+                                    show: true,//控制滚动条显示隐藏
+                                    realtime: true, //拖动滚动条时是否动态的更新图表数据
+                                    height: 15, //滚动条高度
+                                    start: 0, //滚动条开始位置（共100等份）
+                                    end: 50,//滚动条结束位置
+                                    top:353,
+                                    zoomLock: true, //控制面板是否进行缩放
+                                },
+                                {
+                                    type: 'inside',
+                                    brushSelect: true,
+                                    start: 0,
+                                    end: 10,
+                                    xAxisIndex: [0],
+                                }
+                                ],
+                            tooltip: {
+                                trigger: 'item',
+                                formatter:'{c}%',
+                                axisPointer: {
+                                type: 'shadow'
+                                }
+                            },
+                            label: {
+                                    show: true,
+                                    position: 'top',
+                                    formatter: '{b}\n{c}%'
+                                },
+                            xAxis: {
+                                type: 'category',
+                                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                            },
+                            yAxis: {
+                                type: 'value'
+                            },
+                            grid: {
+                                top: '100px',
+                                left: '1%',
+                                right: '1%',
+                                bottom: '3%',
+                                containLabel: true
+                            },
+                            series: [
+                                {
+                                data:  [120, 200, 150, 80, 70, 110, 130],
+                                type: 'bar',
+                                barGap:'2%',
+                                barWidth : 30,
+                                itemStyle:{
+                                    normal:{
+                                        color:' #79bbff'
+                                    }
+                                },
+                                }
+                            ]
+                        },
                         
                     }
                 )
+               
                 const shortcuts = [
                     {
                         text: 'Last week',
@@ -799,6 +1730,7 @@
                     ]
                 
                 function kg_member_check(){
+                    
                     kgget_data.kg_starttime=moment(kgget_data.kg_datetime[0],"yyyy-MM-DD").format().split('T')[0]
                     kgget_data.kg_endtime=moment(kgget_data.kg_datetime[1],"yyyy-MM-DD").format().split('T')[0]
                    
@@ -812,8 +1744,12 @@
                     else{
                         kgget_data.kg_show=true
                         kgget_data.kg_tag=true
+                       
+                        
+                        
+                        // show_false()
                         axios({
-                            url: '/api/v1/ObjectiveKpiIssueInfo/',
+                            url: '/api/v1/ObjectiveKpiInfo/',
                             method:'get',
                             params:{
                                     member:kgget_data.kgselect[2],
@@ -842,50 +1778,418 @@
                                 kgget_data.kg_echars1_data.series[0].data=issue_pie
                                 kgget_data.kg_issue_pie=res.data.data
                                 kgget_data.kg_issue_pie["completed_percentage"]=(parseFloat(res.data.data.completed/res.data.data.all)*100).toFixed(2)
-                                kgget_data.kg_issue_pie["cancel_percentage"]=(parseFloat(res.data.data.cance/res.data.data.all)*100).toFixed(2)
+                                kgget_data.kg_issue_pie["cancel_percentage"]=(parseFloat(res.data.data.cancel/res.data.data.all)*100).toFixed(2)
                                 kgget_data.kg_issue_pie["delay_percentage"]=(parseFloat(res.data.data.delay/res.data.data.all)*100).toFixed(2)
                                 kgget_data.kg_issue_pie["ongoing_percentage"]=(parseFloat(res.data.data.ongoing/res.data.data.all)*100).toFixed(2)
+                                var issue_three_list=[]
+                                var issue_three_count=[]
+                                var issue_three_delay=[]
+                                var issue_three_source=[]
+                                for(var i in res.data.score_chart){
+                                    console.log(i);
+                                    for(var j in res.data.score_chart[i]){
+                                        issue_three_list.push(i+"_"+j)
+                                        issue_three_count.push(res.data.score_chart[i][j]["count"])
+                                        issue_three_delay.push(res.data.score_chart[i][j]["delay"])
+                                        issue_three_source.push(res.data.score_chart[i][j]["source"])
+                                        // console.log(res.data.chart[i][j]);
+                                    }
+                                    // console.log(res.data.chart[res.data.chart[i]]);
+                                }
+                                if(issue_three_count.length<9){
+                                    kgget_data.kg_echars2_data.dataZoom[0]['end']=100
+                                }
+                                else{
+                                    kgget_data.kg_echars2_data.dataZoom[0]['end']=70
+                                }
+                                kgget_data.kg_echars2_data.xAxis[0].data=issue_three_list
+                                kgget_data.kg_echars2_data.series[0].data=issue_three_count
+                                kgget_data.kg_echars2_data.series[1].data=issue_three_delay
+                                kgget_data.kg_echars2_data.series[2].data=issue_three_source
+                                var project_chart_name=[]
+                                var project_chart_number=[]
+                                for(var i in res.data.project_chart){
+                                  
+                                    project_chart_name.push(i)
+                                    project_chart_number.push(res.data.project_chart[i])
+                                }
+                                console.log();
+                                if(project_chart_number.length<9){
+                                    kgget_data.kg_echars3_data.dataZoom[0]['end']=100
+                                }
+                                else{
+                                    kgget_data.kg_echars3_data.dataZoom[0]['end']=50
+                                }
+                                kgget_data.kg_echars3_data.xAxis.data=project_chart_name
+                                kgget_data.kg_echars3_data.series[0].data=project_chart_number
                                 
+                                
+                                var sh_issue = kg_echars_math(res.data.all_member_issues['上海'])
+                                kgget_data.kg_echars5_data.title.subtext=`${kgget_data.kg_starttime}~${kgget_data.kg_endtime}|需求总数：${sh_issue[2]}`
+                                kgget_data.kg_echars5_data.xAxis.data=sh_issue[0]
+                                kgget_data.kg_echars5_data.series[0].data=sh_issue[1]
+
+                                var sh_bug = kg_echars_math(res.data.all_member_bugs['上海'])
                                
-                            })
-                            
-                            setTimeout(() => {
+                                kgget_data.kg_echars6_data.title.subtext=`${kgget_data.kg_starttime}~${kgget_data.kg_endtime}|BUG总数：${sh_bug[2]}`
+                                kgget_data.kg_echars6_data.xAxis.data=sh_bug[0]
+                                kgget_data.kg_echars6_data.series[0].data=sh_bug[1]
+
+                                var sz_issue = kg_echars_math(res.data.all_member_issues['深圳'])
+                                
+                                kgget_data.kg_echars7_data.title.subtext=`${kgget_data.kg_starttime}~${kgget_data.kg_endtime}|需求总数：${sz_issue[2]}`
+                                kgget_data.kg_echars7_data.xAxis.data=sz_issue[0]
+                                kgget_data.kg_echars7_data.series[0].data=sz_issue[1]
+                                
+                                var sz_bug = kg_echars_math(res.data.all_member_bugs['深圳'])
+                                
+                                kgget_data.kg_echars8_data.title.subtext=`${kgget_data.kg_starttime}~${kgget_data.kg_endtime}|BUG总数：${sz_bug[2]}`
+                                kgget_data.kg_echars8_data.xAxis.data=sz_bug[0]
+                                kgget_data.kg_echars8_data.series[0].data=sz_bug[1]
+
+                                var all_issue_cache=res.data.all_member_issues['上海']
+                                
+                                for (var i in res.data.all_member_issues['深圳']){
+                                    res.data.all_member_issues['上海'][i]=res.data.all_member_issues['深圳'][i]
+                                }
+                                var all_issue = kg_echars_math(all_issue_cache)
+                                kgget_data.kg_echars9_data.title.subtext=`${kgget_data.kg_starttime}~${kgget_data.kg_endtime}|需求总数：${all_issue[2]}`
+                                kgget_data.kg_echars9_data.xAxis.data=all_issue[0]
+                                kgget_data.kg_echars9_data.series[0].data=all_issue[1]
+                                if(all_issue[1].length<9){
+                                    kgget_data.kg_echars9_data.dataZoom[0]['end']=100
+                                }
+                                else{
+                                    kgget_data.kg_echars9_data.dataZoom[0]['end']=50
+                                }
+                               
+
+
+                                var all_bugs_cache=res.data.all_member_bugs['上海']
+                                
+                                for (var i in res.data.all_member_bugs['深圳']){
+                                    res.data.all_member_bugs['上海'][i]=res.data.all_member_bugs['深圳'][i]
+                                }
+                                var all_bugs = kg_echars_math(all_bugs_cache)
+                                kgget_data.kg_echars10_data.title.subtext=`${kgget_data.kg_starttime}~${kgget_data.kg_endtime}|需求总数：${all_bugs[2]}`
+                                kgget_data.kg_echars10_data.xAxis.data=all_bugs[0]
+                                kgget_data.kg_echars10_data.series[0].data=all_bugs[1]
+                                if(all_bugs[1].length<9){
+                                    kgget_data.kg_echars10_data.dataZoom[0]['end']=100
+                                }
+                                else{
+                                    kgget_data.kg_echars10_data.dataZoom[0]['end']=50
+                                }
+                              
+                                kg_member_projectbug()
                                 kg_member_issue_echars()
                                 kg_memberchart()
-                                var kg_echars3 = echarts.getInstanceByDom(document.getElementById("kg_echars_3"))
-                                if (kg_echars3 == null) { // 如果不存在，就进行初始化
-                                    kg_echars3 = echarts.init(document.getElementById("kg_echars_3"));
-                                }
-                                kg_echars3.setOption(kgget_data.kg_echars3_data,true);
-                                // var kg_echars4 = echarts.getInstanceByDom(document.getElementById("kg_echars_4"))
-                                // if (kg_echars4 == null) { // 如果不存在，就进行初始化
-                                //     kg_echars4 = echarts.init(document.getElementById("kg_echars_4"));
-                                // }
-                                // kg_echars4.setOption(kgget_data.kg_echars4_data,true);
-                            }, 300);
+                                kg_member_issue_contrast()
+                                kg_member_bug_contrast()
+                                kgsz_member_issue_contrast()
+                                kgsz_member_bug_contrast()
+                                kg_member_issue_all()
+                                kg_member_bug_all()
+                                
+                              
+                               
+                                kgget_data.kg_titleshow_all=false
+                             
+                                // document.getElementById("kg_titleid_all").className='animate__animated animate__backOutLeft'
+                            
+                                // setTimeout(() => {
+                                //     kgget_data.kg_titleshow_all=false
+                                
+                                // }, 1000);
+                                
+                            })
+                            
                            
-                            console.log(kgget_data.kgselect[2]);
-                        
-                            console.log(moment(kgget_data.kg_datetime[0],"yyyy-MM-DD").format().split('T')[0]);
-                            console.log(moment(kgget_data.kg_datetime[1],"yyyy-MM-DD").format().split('T')[0]);
+                            
+                            
+                            kg_member_bug_echars()
+                           
+                           
                             }
                             
                         }
-                function kg_member_issue_echars(){
-                    var kg_echars1 = echarts.getInstanceByDom(document.getElementById("kg_echars_1"))
-                    if (kg_echars1 == null) { // 如果不存在，就进行初始化
-                        kg_echars1 = echarts.init(document.getElementById("kg_echars_1"));
+                function kg_test(){
+                  
+                       if(kgget_data.kg_titleshow==true){
+                            document.getElementById("kg_titleid").className='animate__animated animate__fadeOutUp'
+                            
+                            setTimeout(() => {
+                                kgget_data.kg_titleshow=false
+                                
+                               
+                            }, 700);
+                            setTimeout(() => {
+                                document.getElementById("kg_titleid_all").className='animate__animated animate__backInRight'
+                                kgget_data.kg_titleshow_all=true
+                            }, 300);
+                            
+                       }
+                       else{
+                        document.getElementById("kg_titleid_all").className='animate__animated animate__backOutRight'
+                            setTimeout(() => {
+                                kgget_data.kg_titleshow_all=false
+                                
+                            }, 700);
+                            setTimeout(() => {
+                                document.getElementById("kg_titleid").className='animate__animated animate__fadeInDown'
+                                kgget_data.kg_titleshow=true
+                            }, 300);
+                        
+                              
+                          
+                        
+                    
+                           
+                        
+                       }
+                       
+                        // kg_member_check()
+                   
+                }
+                function kg_echars_math(data){ 
+                    var all_member_issues_name=[]
+                    var all_member_issues_number=[]
+                    for (var i in data){
+                        
+                        all_member_issues_name.push(i)
+                        all_member_issues_number.push(data[i])
                     }
-                    kg_echars1.setOption(kgget_data.kg_echars1_data,true);
+                    
+                    for(var i=0;i<all_member_issues_number.length;i++){
+                        for (var j=0;j<all_member_issues_number.length-i-1;j++){
+                            // console.log(all_member_issues_number);
+                            if (all_member_issues_number[j]<all_member_issues_number[j+1]){
+                                all_member_issues_number[j]=[all_member_issues_number[j+1],all_member_issues_number[j+1]=all_member_issues_number[j]][0]
+                                all_member_issues_name[j]=[all_member_issues_name[j+1],all_member_issues_name[j+1]=all_member_issues_name[j]][0]
+                            }
+                        }
+                    }
+                    var sh_issue_count = 0
+                    
+                    for (var i in all_member_issues_number){
+                        sh_issue_count+=all_member_issues_number[i]
+                    }
+                    
+                    for(var i in all_member_issues_number){
+                        all_member_issues_number[i] = Math.round((all_member_issues_number[i]/sh_issue_count)*100)
+                    }
+                    for(var i=0;i<all_member_issues_name.length;i++){
+                        
+                        if(all_member_issues_name[i]==kgget_data.kgselect[2]){
+                            var num = all_member_issues_number[i]
+                            all_member_issues_number[i]={
+                                "value":num,
+                                "itemStyle":{
+                                    "color":"#a90000"
+                                }
+                            }
+                        }
+                    }
+                   
+                    var result = []
+                    result.push(all_member_issues_name,all_member_issues_number,sh_issue_count)
+                    return result
+                }
+                function show_false(){
+                    // setTimeout(() => {
+                    //     kgget_data.kg_titleshow_all=false
+                    // }, 2000);
+                }
+                function kg_member_issue_all(){
+                    var kg_echars9 = echarts.getInstanceByDom(document.getElementById("kg_echars_9"))
+                        if (kg_echars9 == null) { // 如果不存在，就进行初始化
+                            kg_echars9 = echarts.init(document.getElementById("kg_echars_9"));
+                        }
+                        kg_echars9.setOption(kgget_data.kg_echars9_data,true);
+                }
+                function kg_member_bug_all(){
+                    var kg_echars10 = echarts.getInstanceByDom(document.getElementById("kg_echars_10"))
+                        if (kg_echars10 == null) { // 如果不存在，就进行初始化
+                            kg_echars10 = echarts.init(document.getElementById("kg_echars_10"));
+                        }
+                        kg_echars10.setOption(kgget_data.kg_echars10_data,true);
+                }   
+                function kg_bug_table_check(list,name){
+                    kgget_data.kg_bugtable_input=""
+                    kgget_data.kg_bug_current_page=1
+                    var data = []
+                    kgget_data.kg_dialogVisible=true
+                    var count = 1
+                    for(var i in kgget_data[list][name]){
+                        kgget_data[list][name][i]["list_id"]=count
+                        count+=1
+                    }
+                    for (var i=0;i<10;i++){
+                        if(kgget_data[list][name][i]!=undefined){
+                            data.push(kgget_data[list][name][i])
+                        }
+                        
+                    }
+                    kgget_data.kg_bugtableData=data
+                    kgget_data.kg_bug_list_cache=kgget_data[list][name]
+                    kgget_data.kg_bug_list_cache_length = kgget_data[list][name.split("_")[0]]
+                    kgget_data.kg_bug_info_list=list
+                    kgget_data.kg_bug_info_name = name
+                    // console.log(kgget_data[list][name]);
+                }
+                function kg_bughandleSizeChange(val){
+                    console.log(val);
+                }
+                function kg_bughandleCurrentChange(val){
+                    
+                    var data = []
+                    var num = parseInt(val.toString()+"0")
+          
+                    for(var i=num-10;i<num;i++){
+                        console.log(i);
+                        if(kgget_data.kg_bug_list_cache[i]!=undefined){
+                            data.push(kgget_data.kg_bug_list_cache[i])
+                        }
+                    }
+                    console.log(data);
+                    kgget_data.kg_bugtableData=data
+                    kgget_data.kg_bug_current_page = val
+                   
+                }
+                function kg_handleEnterKeyFilter(){
+                    kgget_data.kg_bug_current_page=1
+                    
+                    var data_list = []
+                    if(kgget_data.kg_bugtable_input != ""){
+                        for(var i in kgget_data.kg_bug_list_cache){
+                            var data = kgget_data.kg_bug_list_cache[i]['title']
+                            if (data.indexOf(kgget_data.kg_bugtable_input) != -1){
+                                data_list.push(kgget_data.kg_bug_list_cache[i])
+                            }
+                        }
+                        kgget_data.kg_bugtableData=data_list
+                        kgget_data.kg_bug_list_cache_length=data_list.length
+                    }
+                    else{
+                        kg_bug_table_check(kgget_data.kg_bug_info_list,kgget_data.kg_bug_info_name)
+                    }
+                }
+                function kg_member_issue_contrast(){
+                   
+                        var kg_echars5 = echarts.getInstanceByDom(document.getElementById("kg_echars_5"))
+                        if (kg_echars5 == null) { // 如果不存在，就进行初始化
+                            kg_echars5 = echarts.init(document.getElementById("kg_echars_5"));
+                        }
+                        kg_echars5.setOption(kgget_data.kg_echars5_data,true);
+        
+                }
+                function kgsz_member_issue_contrast(){
+                   
+                   var kg_echars7 = echarts.getInstanceByDom(document.getElementById("kg_echars_7"))
+                   if (kg_echars7 == null) { // 如果不存在，就进行初始化
+                       kg_echars7 = echarts.init(document.getElementById("kg_echars_7"));
+                   }
+                   kg_echars7.setOption(kgget_data.kg_echars7_data,true);
+   
+                }
+                function kg_member_bug_contrast(){
+                   
+                        var kg_echars6 = echarts.getInstanceByDom(document.getElementById("kg_echars_6"))
+                        if (kg_echars6 == null) { // 如果不存在，就进行初始化
+                            kg_echars6 = echarts.init(document.getElementById("kg_echars_6"));
+                        }
+                        kg_echars6.setOption(kgget_data.kg_echars6_data,true);
+              
+                }
+                function kgsz_member_bug_contrast(){
+                   
+                   var kg_echars8 = echarts.getInstanceByDom(document.getElementById("kg_echars_8"))
+                   if (kg_echars8 == null) { // 如果不存在，就进行初始化
+                       kg_echars8 = echarts.init(document.getElementById("kg_echars_8"));
+                   }
+                   kg_echars8.setOption(kgget_data.kg_echars8_data,true);
+         
+                }
+                function kg_deleteRow(val){
+                    console.log(val.url);
+                    window.open(val.url,"_blank")
+                }
+                function kg_member_issue_echars(){
+                        var kg_echars1 = echarts.getInstanceByDom(document.getElementById("kg_echars_1"))
+                        if (kg_echars1 == null) { // 如果不存在，就进行初始化
+                            kg_echars1 = echarts.init(document.getElementById("kg_echars_1"));
+                        }
+                        kg_echars1.setOption(kgget_data.kg_echars1_data,true);
                 }
                 function kg_memberchart(){
-                    var kg_echars2 = echarts.getInstanceByDom(document.getElementById("kg_echars_2"))
-                    if (kg_echars2 == null) { // 如果不存在，就进行初始化
-                        kg_echars2 = echarts.init(document.getElementById("kg_echars_2"));
-                        }
-                        kg_echars2.setOption(kgget_data.kg_echars2_data,true);
+                        var kg_echars2 = echarts.getInstanceByDom(document.getElementById("kg_echars_2"))
+                        if (kg_echars2 == null) { // 如果不存在，就进行初始化
+                            kg_echars2 = echarts.init(document.getElementById("kg_echars_2"));
+                            }
+                            kg_echars2.setOption(kgget_data.kg_echars2_data,true);
                     }
+                function kg_member_projectbug(){
+                    
+                    setTimeout(() => {
+                        var kg_echars3 = echarts.getInstanceByDom(document.getElementById("kg_echars_3"))
+                        if (kg_echars3 == null) { // 如果不存在，就进行初始化
+                            kg_echars3 = echarts.init(document.getElementById("kg_echars_3"));
+                        }
+                        kg_echars3.setOption(kgget_data.kg_echars3_data,true);
+                    }, 300);
+                }
+                function kg_member_bug_echars(){
+                    axios({
+                        url: '/api/v1/BugStatistics/',
+                        method:'get',
+                        params:{
+                            project:"all",
+                            start:kgget_data.kg_starttime,
+                            end:kgget_data.kg_endtime,
+                            _type:"fx",
+                            member:kgget_data.kgselect[2],
+                            iteration:"所有迭代"
+                            }
+                        })
+                        .then(res => {
+                            var data = []
+                            kgget_data.kg_member_bugdata=res.data.data
+                            kgget_data.kg_member_bugdata_all=res.data.data["BUG总数"]
+                            kgget_data.kg_member_bugdata_add=res.data.data["新增BUG数"]
+                            kgget_data.kg_member_bugdata_delay=res.data.data["遗留BUG数"]
+                            kgget_data.kg_member_bugdata_close=res.data.data["关闭BUG数"]
+                            kgget_data.kg_member_bugdata_return=res.data.data["BUG回归失败"]
+                            kgget_data.kg_member_bugdata_restart=res.data.data["BUG重启"]
+                            for(var i in res.data.data){
+                                if (i != "BUG总数"){
+                                    data.push(
+                                    {
+                                        "value":res.data.data[i]["sum"],
+                                        "name":i
+                                    }
+                                    )
+                                }
+                            }
+                            
+
+                            kgget_data.kg_echars4_data.series[0]["data"]=data
+                            var kg_echars4 = echarts.getInstanceByDom(document.getElementById("kg_echars_4"))
+                            if (kg_echars4 == null) { // 如果不存在，就进行初始化
+                                kg_echars4 = echarts.init(document.getElementById("kg_echars_4"));
+                                }
+                            kg_echars4.setOption(kgget_data.kg_echars4_data,true);
+                        })
+                        
+                    }
+                function kg_datatime_choice(){
+                    kgget_data.kg_titleshow=true
+                    kgget_data.kg_titleshow_all=true
+                    kgget_data.kg_tag=false
+                    kgget_data.kg_show=false
+                }
                 function kg_member_choice(){
+                    kgget_data.kg_titleshow=true
+                    kgget_data.kg_titleshow_all=true
                     kgget_data.kg_tag=false
                     kgget_data.kg_show=false
                     axios({
@@ -1934,10 +3238,25 @@
                     refresh,
                     kg_member_choice,
                     kg_member_check,
-                    shortcuts
-                   
-                    
-                   
+                    shortcuts,
+                    kg_datatime_choice,
+                    kg_member_issue_echars,
+                    kg_memberchart,
+                    kg_member_bug_echars,
+                    kg_member_projectbug,
+                    kg_bug_table_check,
+                    kg_bughandleCurrentChange,
+                    kg_bughandleSizeChange,
+                    kg_handleEnterKeyFilter,
+                    kg_deleteRow,
+                    kg_member_issue_contrast,
+                    kg_member_bug_contrast,
+                    kgsz_member_issue_contrast,
+                    kgsz_member_bug_contrast,
+                    kg_test,
+                    kg_member_issue_all,
+                    kg_member_bug_all,
+                    show_false
                 }
             }
         }
@@ -2085,6 +3404,56 @@
     .card_css{
         margin: 20px;
     }
-    
+    .kg_bug_title{
+        font-size:17px;
+        float: left;
+    }
+    .kg_bug_text{
+        font-size:14px;
+        float: left;
+        margin:5px 0px 5px 0px
+    }
+    .kg_bug_stage{
+        font-size:14px;
+        float: left;
+        margin:5px 0px 5px 0px
+    }
+    .box{
+        box-shadow:0px -5px 5px #88888830,-5px 0px 5px #88888830,5px 0px 5px #88888830,0px 5px 5px #88888830;
+        flex:0 0 28%;
+        margin:20px;
+        display:flex;
+        flex-direction:column;
+        padding:10px;
+        height: 120px;
+    }
+    .kg_bug_stageinfo{
+        color:#5f6e82;
+        font-size:14px;
+        cursor:pointer;
+    }
+    .kg_bug_stageinfo:hover{
+        color:  #f89898;
+    }
+    .kg_bug_stageinfo_title:hover{
+        color: #a0cfff;
+    }
+    .scrollbar-flex-content {
+  display: flex;
+}
+.scrollbar-demo-item {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  height: 50px;
+  margin: 10px;
+  text-align: center;
+  border-radius: 4px;
+  background: var(--el-color-danger-light-9);
+  color: var(--el-color-danger);
+}
+
     </style>
     
