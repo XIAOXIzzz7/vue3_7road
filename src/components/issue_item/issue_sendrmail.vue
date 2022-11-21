@@ -2,7 +2,7 @@
   
 <template>
 
-<!-- <el-button @click="check()">11</el-button> -->
+<el-button @click="check()">11</el-button>
   <div class="content">
     <div style="margin: 20px;">
       <div style="display:flex;">
@@ -31,7 +31,7 @@
             
               <div >
                   <div style="margin-left:10px;float: left;">
-                <input type="file" placeholder="选择excel" multiple @change="riverConfigImportexcel"/>
+                <input type="file" id="fileupload" placeholder="选择excel" multiple @change="riverConfigImportexcel"/>
                 <!-- <input type="file" placeholder="选择png" multiple @change="riverConfigImportimg"/> -->
                   </div>
               </div>
@@ -314,14 +314,28 @@ import { List } from 'echarts';
   
    function riverConfigImportexcel(event){
     
-    for (var i in event.target.files){
-      console.log(event.target.files[i]);
+    // if (event.target.files['name'].indexOf(",")!=-1){
+    //   console.log("111");
       
+    // }
+    for(var i in event.target.files){
+      if (typeof(event.target.files[i])=="object"){
+        if (event.target.files[i]['name'].indexOf(",")!=-1){
+          ElMessage.error('文件名称中请勿存在 ","')
+          // var obj = document.getElementById('fileupload') as any;  
+          // obj.outerHTML = obj.outerHTML;
+          var input = document.getElementById("fileupload") as any;
+          input.value='';
+         
+         
+          
+        }
+
+      }
     }
-    for (var l=0;l<event.target.files.length;l++){
-      console.log(event.target.files[l]);
-      
-    }
+    
+    console.log(event.target.files);
+    
     let lis = []
     let lis_name = [] as any
     // for (var i=0;i<event.target.files.length;i++){
@@ -339,8 +353,6 @@ import { List } from 'echarts';
     }
     data_set.excel=lis
     data_set.excel_list=lis_name
-    console.log(data_set.excel);
-    console.log(data_set.excel_list);
     
     
   }
@@ -371,7 +383,8 @@ import { List } from 'echarts';
   //  }
   function check(){
   // console.log(data_set.projectinput2);
-    console.log(data_set.editorData);
+    console.log(data_set.excel);
+    
  
 
 

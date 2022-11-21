@@ -959,7 +959,44 @@
             
         <!-- 综合考评页面 -->
         <div v-show="titleshow3">
-            综合考评
+            <!-- <el-button @click="zh_test()">11</el-button> -->
+            <div class="animate__animated animate__fadeInRight">
+                <el-card class="box-card">
+                <template #header style="padding:10px">
+                    <div style="display:flex;justify-content: space-between;">
+                        <div></div>
+                     
+                        <div>
+                            <el-cascader v-if="zh_close_show" size="default" @visible-change="zh_member_choice()" placeholder="请选择成员" :options="zh_kgoptions" v-model="zh_select"/>
+                            <el-date-picker
+                            v-if="zh_close_show"
+                                v-model="zh_month_select"
+                                type="month"
+                                placeholder="请选择月份"
+                                />
+                            <el-button v-if="zh_close_show" text @click="zh_close()"><el-icon><Close /></el-icon></el-button>
+                            <el-button v-if="zh_setting_show" @click="zh_setting()" style="width:20px;"><el-icon><Setting /></el-icon></el-button>
+                        </div>
+
+                    </div>
+                </template>
+                <div style="display:flex">
+                        <el-card shadow="hover" style="flex:0 0 50%;"> 
+                            <el-table :data="zh_rule" style="width: 100%" >
+                                <el-table-column fixed prop="level" label="OKR评级" width="90" />
+                                <el-table-column prop="data" label="评级定义" width="200" />
+                                <el-table-column prop="gule" label="评级规则" width="220" />
+                                <el-table-column prop="rank" label="排名" width="60" />
+                                <el-table-column prop="issue" label="需求分" width="100" />
+                                <el-table-column prop="bug" label="BUG分" width="100" />
+                            </el-table>
+
+                        </el-card>
+                        <div style="flex: 0 0 2%"></div>
+                        <el-card shadow="hover" style="height:400px;min-height:400px;padding:20px;flex: 0 0 48%;" id="zh_rank_echars"></el-card>
+                    </div>
+                </el-card>
+            </div>
         </div>
     </div>
     </template>
@@ -980,6 +1017,209 @@
          useRouter } from "vue-router";
             export default{
             setup(){
+                // 综合评价
+                const zhget_data = reactive(
+                    {
+                        zh_rule:[
+                        {
+                            level: 'S',
+                            data: '优秀以上、超出预期',
+                            gule: '客观最终分值+主观分值：90+',
+                            rank: '1',
+                            issue: '20',
+                            bug: '30',
+                        },
+                        {
+                            level: 'A',
+                            data: '优秀人员、达到预期值',
+                            gule: '客观最终分值+主观分值：80+',
+                            rank: '2-5',
+                            issue: '17',
+                            bug: '25',
+                        },
+                        {
+                            level: 'B',
+                            data: '业务能力OK、有小缺点但不影响业务',
+                            gule: '客观最终分值+主观分值：70+',
+                            rank: '6-12',
+                            issue: '13',
+                            bug: '20',
+                        },
+                        {
+                            level: 'C',
+                            data: '及格、业务能力一般、有小遗漏但不影响大方面',
+                            gule: '客观最终分值+主观分值：60+',
+                            rank: '13-20',
+                            issue: '13',
+                            bug: '20',
+                        },
+                        {
+                            level: 'D',
+                            data: '不及格、业务能力各方面达不到预期、勉强能用',
+                            gule: '客观最终分值+主观分值：60-',
+                            rank: '----------',
+                            issue: '10',
+                            bug: '15',
+                        },
+                        ],
+                        zh_rank_echars_data:{
+                            title: {
+                                text: 'World Population'
+                            },
+                            tooltip: {
+                                trigger: 'axis',
+                                axisPointer: {
+                                type: 'shadow'
+                                }
+                            },
+                            
+                            legend: {},
+                            grid: {
+                                left: '3%',
+                                right: '4%',
+                                bottom: '3%',
+                                containLabel: true
+                            },
+                            xAxis: {
+                                type: 'value',
+                                boundaryGap: [0, 0.01]
+                            },
+                            yAxis: {
+                                type: 'category',
+                                
+                                data: ['Brazil', 'Indonesia', 'USA', 'India', 'China', 'World']
+                            },
+                            series: [
+                                {
+                                name: '2011',
+                                label: {
+                                    normal: {
+                                        show: true,
+                                        formatter: '{c}'
+                                    },
+                                  
+                                    position: 'right'
+                                },
+                                type: 'bar',
+                                data: [18203, 23489, 29034, 104970, 131744, 630230]
+                                },
+                            
+                            ]
+                        },
+                        zh_kgoptions:[],
+                        zh_select:"",
+                        zh_month_select:"",
+                        zh_setting_show:true,
+                        zh_close_show:false
+
+                    }
+                )
+                function zh_test(){
+                    
+                }
+                function zh_setting(){
+                    zhget_data.zh_setting_show=false
+                    zhget_data.zh_close_show=true
+                }
+                function zh_close(){
+                    zhget_data.zh_setting_show=true
+                    zhget_data.zh_close_show=false
+                }
+                function zh_member_choice(){
+                    axios({
+                        url: '/api/v1/AdminConfig/',
+                        method:'get',
+                        params:{
+                                type:"member"
+                            }
+                        }).then(res => {
+                            var member_list = [
+                            {
+                                value:"所有在职",
+                                label:"在职",
+                                children:[
+                                    {
+                                        value:"上海正职",
+                                        label:"上海正职",
+                                        children:[
+                                            
+                                        ]
+                                    },
+                                    {
+                                        value:"上海外包",
+                                        label:"上海外包",
+                                        children:[
+    
+                                        ]
+                                    },
+                                   
+                                ]
+                            },
+                            {
+                                value:"所有离职",
+                                label:"离职",
+                                children:[
+                                    {
+                                        value:"上海正职",
+                                        label:"上海正职",
+                                        children:[
+                                            
+                                        ]
+                                    },
+                                    {
+                                        value:"上海外包",
+                                        label:"上海外包",
+                                        children:[
+    
+                                        ]
+                                    },
+                                   
+                                ]
+                            }
+                        
+                        ]
+                        for (var i in res.data.data){
+                            var info = res.data.data[i]
+                        
+                            if (info['group'] == '上海外包' && info['status'] == "在职"){
+                                member_list[0]["children"][1]["children"].push(
+                                    {
+                                        value:i,
+                                        label:i
+                                    }
+                                )
+                            }
+                            else if(info['group'] == '上海正职' && info['status'] == "在职"){
+                                member_list[0]["children"][0]["children"].push(
+                                    {
+                                        value:i,
+                                        label:i
+                                    }
+                                )
+                            }
+                            
+                            else if(info['group'] == '上海正职' && info['status'] == "离职"){
+                                member_list[1]["children"][0]["children"].push(
+                                    {
+                                        value:i,
+                                        label:i
+                                    }
+                                )
+                            }
+                            else if(info['group'] == '上海外包' && info['status'] == "离职"){
+                                member_list[1]["children"][1]["children"].push(
+                                    {
+                                        value:i,
+                                        label:i
+                                    }
+                                )
+                            }
+                           
+    
+                        }
+                        zhget_data.zh_kgoptions = member_list
+                        })
+                }
                 // 客观数据评价功能
                 const kgget_data = reactive(
                     {
@@ -2751,6 +2991,31 @@
                         get_data.titleshow1=false
                         get_data.titleshow2=false
                         get_data.titleshow3=true
+                        
+                        
+                        var myDate = new Date();
+                        var year = myDate.getFullYear(); //获取当前年份(2位)
+                        console.log(year);
+                        var Last_month = new Date().getMonth();
+                        Last_month = ((Last_month == 0) ? (12) : (Last_month));
+                        console.log(Last_month);
+                        axios({
+                        url: '/api/v1/SubjectiveKpi/',
+                        method:'get',
+                        params:{
+                                date:year+"-"+Last_month
+                            }
+                        }).then(res => {
+                            console.log(res.data.data.kpi);
+                        })
+                        
+                        setTimeout(() => {
+                            var zh_rank_e = echarts.getInstanceByDom(document.getElementById("zh_rank_echars"))
+                            if (zh_rank_e == null) { // 如果不存在，就进行初始化
+                                zh_rank_e = echarts.init(document.getElementById("zh_rank_echars"));
+                            }
+                            zh_rank_e.setOption(zhget_data.zh_rank_echars_data,true);
+                        }, 500);
                     }
                 }
                 function groupleader(){
@@ -3217,6 +3482,7 @@
                 return{ 
                     ...toRefs(get_data),
                     ...toRefs(kgget_data),
+                    ...toRefs(zhget_data),
                     create,
                     add,
                     check,
@@ -3256,7 +3522,11 @@
                     kg_test,
                     kg_member_issue_all,
                     kg_member_bug_all,
-                    show_false
+                    show_false,
+                    zh_test,
+                    zh_member_choice,
+                    zh_setting,
+                    zh_close
                 }
             }
         }
