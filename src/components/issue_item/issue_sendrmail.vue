@@ -90,6 +90,7 @@
     import { ref,onMounted} from 'vue'
     import type { TabsPaneContext } from 'element-plus'
     import { objectEach, objectMap } from 'xe-utils';
+import { List } from 'echarts';
 
     const data_set = reactive(
       {
@@ -165,7 +166,8 @@
               // The configuration of the editor.
           },
         datetime:"",
-        excel:{},
+        excel:[],
+        excel_list:[] as any,
         img:{},
         log:{},
         projectinput1:"",
@@ -214,7 +216,7 @@
 
     }
     
-
+    const formData = new FormData();
   
    function push(){
       if(data_set.excel[0] == undefined){
@@ -229,9 +231,9 @@
         )
         .then(() => {
             var datahtml = `<html><head><style>.tablec{width:100%;}.table{margin:0px}</style></head><body>${data_set.editorData}</body></html>`.replace(/<table/g,'<table border="1px" cellpadding="0" cellspacing="0" class="tablec"').replace(/class="ck-table-resized"/g,"")
-            const formData = new FormData();
+            // const formData = new FormData();
             formData.append("html",datahtml)
-            formData.append("report","")
+            // formData.append("report","")
             formData.append("report_name","")
             formData.append("project",data_set.project_value)
             formData.append("title",data_set.projectinput1)
@@ -242,10 +244,9 @@
             ElMessage(
             '开始发送发送邮件，请稍等'
             )
-            hpaxios('http://10.0.22.242:8081/api/v1/SendReportEmail/', formData, config)
+            hpaxios('/api/v1/SendReportEmail/', formData, config)
             .then(res => {
-                console.log(11111,res);
-                console.log(1111111,res.data);
+               
                 data_set.log = res
                 if(res.data.msg != "发送邮件成功"){
                     console.log("1111111111111");
@@ -267,11 +268,18 @@
           
         })
       }else{
+        console.log(data_set.excel);
+        
         var datahtml = `<html><head><style>.tablec{width:100%;}.table{margin:0px}</style></head><body>${data_set.editorData}</body></html>`.replace(/<table/g,'<table border="1px" cellpadding="0" cellspacing="0" class="tablec"').replace(/class="ck-table-resized"/g,"")
-        const formData = new FormData();
+        
         formData.append("html",datahtml)
-        formData.append("report",data_set.excel[0])
-        formData.append("report_name",data_set.excel[0].name.split(".")[0])
+        // for (var i=0;i<data_set.excel.length;i++){
+        //   formData.append("report",data_set.excel[i])
+        // }
+        formData.append("report_name",data_set.excel_list)
+        for (var i=0;i<data_set.excel_list.length;i++){
+          formData.append(data_set.excel_list[i], data_set.excel[i])
+        }
         formData.append("project",data_set.project_value)
         formData.append("title",data_set.projectinput1)
         formData.append("text",data_set.projectinput2)
@@ -281,7 +289,7 @@
         ElMessage(
         '开始发送发送邮件，请稍等'
         )
-        hpaxios('http://10.0.22.242:8081/api/v1/SendReportEmail/', formData, config)
+        hpaxios('/api/v1/SendReportEmail/', formData, config)
         .then(res => {
             console.log(11111,res);
             console.log(1111111,res.data);
@@ -305,9 +313,55 @@
    
   
    function riverConfigImportexcel(event){
-    data_set.excel={}
-    data_set.excel = event.target.files
-   }
+    
+    for (var i in event.target.files){
+      console.log(event.target.files[i]);
+      
+    }
+    for (var l=0;l<event.target.files.length;l++){
+      console.log(event.target.files[l]);
+      
+    }
+    let lis = []
+    let lis_name = [] as any
+    // for (var i=0;i<event.target.files.length;i++){
+    //   console.log(lis[i]);
+      
+    //   formData.append("report",lis[i])
+    // }
+    lis=event.target.files
+    var data = event.target.files
+
+    for(var j in data){
+      if (typeof(data[j])=="object"){
+        lis_name.push(data[j]["name"])
+      }
+    }
+    data_set.excel=lis
+    data_set.excel_list=lis_name
+    console.log(data_set.excel);
+    console.log(data_set.excel_list);
+    
+    
+  }
+  // function riverConfigImportexcel(event){
+  //   data_set.excel=[]
+  //   // data_set.excel = event.target.files
+  //   // var lis = []
+  //   var data = event.target.files
+  //   for(var i in data){
+  //     if (typeof(data[i])=="object"){
+  //       data_set.excel.push(
+  //         {
+  //           "name":data[i]["name"],
+  //           "file":data[i]
+  //         }
+  //       )
+  //     }
+  //   }
+  //   console.log(data_set.excel);
+    
+  // }
   //  function riverConfigImportimg(event){
   //   console.log(event.target.files[0]);
   //   data_set.img = event.target.files[
