@@ -218,22 +218,21 @@ export default {
         console.log(this.showlist);
     },
     mounted(){
-        // axios({
-        //     url: '/api/v1/UserInfo/'
-        //   }).then(res => {
-        //       if (res.data.user["group"] != "测试") {
-        //           this.show=0
-        //       }
-        //       else{
-        //           this.show=1
-        //       }
-        //   })
-        setTimeout(() => {
-            // console.log(this.$store.state.user_info);
+        axios({
+            url: '/api/v1/UserInfo/'
+          }).then(res => {
+            if (res.data.code == 10000){
+                this.$store.state.user_info=res.data.user
+                console.log(this.$store.state.user_info,"121212");
+                this.$store.state.login_status = true
+                
+            }
             console.log("user2");
+            console.log(this.$store.state.user_info);
             if(this.$store.state.user_info){
                 if (this.$store.state.user_info["group"] == "银魂") {
                     this.zyshow = 1
+             
                 
                 }
                 else if (this.$store.state.user_info["group"] == "游客组"){
@@ -244,19 +243,24 @@ export default {
                     this.memshow3=0
                     this.memshow4=0
                     this.fxshow1=0
+          
                 }
                 else{
                     this.zyshow = 1
                     this.fxshow = 1
                     this.memshow = 1
+         
                 }
             }
+          })
+            // console.log(this.$store.state.user_info);
+            
             // else{
             //     this.zyshow = 1
             //     this.fxshow = 1
             //     this.memshow = 1
             // }
-        }, 100);
+
         
         // if (this.$store.state.user_info["group"] != "测试") {
         //     this.show = 0

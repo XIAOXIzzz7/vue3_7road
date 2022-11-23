@@ -36,6 +36,7 @@ export default {
         $route:{
         handler(){
           // console.log("router");
+          console.log("watch");
           axios({
             url: '/api/v1/UserInfo/'
           }).then(res => {

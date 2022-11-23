@@ -967,11 +967,13 @@
                         <div></div>
                      
                         <div>
-                            <el-cascader v-if="zh_close_show" size="default" @visible-change="zh_member_choice()" placeholder="请选择成员" :options="zh_kgoptions" v-model="zh_select"/>
+                            <!-- <el-cascader v-if="zh_close_show" size="default" @visible-change="zh_member_choice()" placeholder="请选择成员" :options="zh_kgoptions" v-model="zh_select"/> -->
                             <el-date-picker
-                            v-if="zh_close_show"
+                                v-if="zh_close_show"
                                 v-model="zh_month_select"
+                                @change="zh_month_change()"
                                 type="month"
+                                :clearable=false
                                 placeholder="请选择月份"
                                 />
                             <el-button v-if="zh_close_show" text @click="zh_close()"><el-icon><Close /></el-icon></el-button>
@@ -1026,45 +1028,46 @@
                             data: '优秀以上、超出预期',
                             gule: '客观最终分值+主观分值：90+',
                             rank: '1',
-                            issue: '20',
-                            bug: '30',
+                            issue: '30',
+                            bug: '20',
                         },
                         {
                             level: 'A',
                             data: '优秀人员、达到预期值',
                             gule: '客观最终分值+主观分值：80+',
                             rank: '2-5',
-                            issue: '17',
-                            bug: '25',
+                            issue: '25',
+                            bug: '17',
                         },
                         {
                             level: 'B',
                             data: '业务能力OK、有小缺点但不影响业务',
                             gule: '客观最终分值+主观分值：70+',
                             rank: '6-12',
-                            issue: '13',
-                            bug: '20',
+                            issue: '20',
+                            bug: '13',
                         },
                         {
                             level: 'C',
                             data: '及格、业务能力一般、有小遗漏但不影响大方面',
                             gule: '客观最终分值+主观分值：60+',
                             rank: '13-20',
-                            issue: '13',
-                            bug: '20',
+                            issue: '20',
+                            bug: '13',
                         },
                         {
                             level: 'D',
                             data: '不及格、业务能力各方面达不到预期、勉强能用',
                             gule: '客观最终分值+主观分值：60-',
                             rank: '----------',
-                            issue: '10',
-                            bug: '15',
+                            issue: '15',
+                            bug: '10',
                         },
                         ],
                         zh_rank_echars_data:{
                             title: {
-                                text: 'World Population'
+                                text: '成员排名',
+                                subtext:"",
                             },
                             tooltip: {
                                 trigger: 'axis',
@@ -1084,14 +1087,36 @@
                                 type: 'value',
                                 boundaryGap: [0, 0.01]
                             },
+                            
+                           
+                            dataZoom: [
+                                {
+                                    orient: "vertical",
+                                    show: true,//控制滚动条显示隐藏
+                                    realtime: true, //拖动滚动条时是否动态的更新图表数据
+                                   
+                                    start:20, //滚动条开始位置（共100等份）
+                                    end: 100,//滚动条结束位置
+                                   
+                              
+                                    zoomLock: false, //控制面板是否进行缩放
+                                },
+                                {
+                                    type: 'inside',
+                                    brushSelect: true,
+                                    start: 0,
+                                    end: 10,
+                                    yAxisIndex: [0],
+                                }
+                                ],
                             yAxis: {
                                 type: 'category',
                                 
-                                data: ['Brazil', 'Indonesia', 'USA', 'India', 'China', 'World']
+                                data: []
                             },
                             series: [
                                 {
-                                name: '2011',
+                                
                                 label: {
                                     normal: {
                                         show: true,
@@ -1101,7 +1126,7 @@
                                     position: 'right'
                                 },
                                 type: 'bar',
-                                data: [18203, 23489, 29034, 104970, 131744, 630230]
+                                data: []
                                 },
                             
                             ]
@@ -1117,6 +1142,29 @@
                 function zh_test(){
                     
                 }
+                function zh_month_change(){
+                    // zh_echars1(zhget_data.zh_month_select.getFullYear(),(zhget_data.zh_month_select.getMonth() + 1))
+                    // console.log(zhget_data.zh_month_select.getFullYear() );
+                    // console.log(zhget_data.zh_month_select.getMonth() + 1);
+                    let month  = zhget_data.zh_month_select.getMonth() + 1
+                    let format_month = ("0" + month).slice(-2);
+                    console.log(format_month);
+                    zh_echars1(zhget_data.zh_month_select.getFullYear(),format_month)
+              
+                }
+                function getDaysInMonth(year, month) {
+                    const daysOfMonth = [];
+                    month = parseInt(month, 10);
+                    const lastDayOfMonth = new Date(year, month, 0).getDate();
+                    for (let i = 1; i <= lastDayOfMonth; i++) {
+                        if (i < 10) {
+                        daysOfMonth.push(year+"-"+month+"-"+"0" + i);
+                        } else {
+                        daysOfMonth.push(year+"-"+month+"-"+i);
+                        }
+                    }
+                    return daysOfMonth;
+                }
                 function zh_setting(){
                     zhget_data.zh_setting_show=false
                     zhget_data.zh_close_show=true
@@ -1124,6 +1172,235 @@
                 function zh_close(){
                     zhget_data.zh_setting_show=true
                     zhget_data.zh_close_show=false
+                }
+                function zh_echars1(year,Last_month){
+                        
+                        var zg_data_list={}
+                        var zg_member_list=[]
+                        axios({
+                        url: '/api/v1/SubjectiveKpi/',
+                        method:'get',
+                        params:{
+                                date:year+"-"+Last_month
+                            }
+                        }).then(res => {
+                            if(res.data.data==null){
+                                ElMessage.error('本月没有数据')
+                                zhget_data.zh_month_select=""
+                                return
+                            }
+                            for(var i in res.data.data.kpi){
+                                if(res.data.data.kpi[i]["score"]!="0.00"){
+                                    zg_data_list[res.data.data.kpi[i]["name"]]=Math.round(res.data.data.kpi[i]["score"])
+                                    zg_member_list.push(res.data.data.kpi[i]["name"])
+                                }
+                                
+                            }
+                            var start_time=""
+                            var end_time =""
+                            start_time = getDaysInMonth(year,Last_month)[0]
+                            end_time = getDaysInMonth(year,Last_month)[(getDaysInMonth(year,Last_month).length)-1]
+                            var kg_issue_data={}
+
+                            var kg_bug_data={}
+
+                            axios({
+                                url: '/api/v1/ObjectiveKpiSort/',
+                                method:'get',
+                                params:{
+                                    members:JSON.stringify(zg_member_list),
+                                    start:start_time,
+                                    end:end_time
+                                    }
+                                }).then(res => {
+                                   
+                                    var sdic=Object.keys(res.data.data.score).sort(function(a,b){return res.data.data.score[b]-res.data.data.score[a]});
+                                
+                                    for(var ki in sdic){  
+                                        kg_issue_data[sdic[ki]] = res.data.data.score[sdic[ki]]           
+                                    }
+                                    var sdic1=Object.keys(res.data.data.bugs).sort(function(a,b){return res.data.data.bugs[b]-res.data.data.bugs[a]});
+                            
+                                    for(var ki in sdic1){  
+                                        kg_bug_data[sdic1[ki]] = res.data.data.bugs[sdic1[ki]]           
+                                    }
+                                    var issue_count = 1
+                                    var issue_cache = 0
+                                    var issue_cache_data = 0
+                                    for(var i in kg_issue_data){
+                                    
+                                        
+                                        
+                                        if (issue_count==1){
+                                            issue_cache=kg_issue_data[i]
+                                            issue_cache_data=30
+                                            kg_issue_data[i]=30
+                                            
+                                            
+                                        }
+                                        else if(issue_count>=2 && issue_count<=5){
+                                            if (kg_issue_data[i] == issue_cache){
+                                            issue_cache=kg_issue_data[i]
+                                                kg_issue_data[i] = issue_cache_data
+                                            }
+                                            else{
+                                                issue_cache=kg_issue_data[i]
+                                                issue_cache_data=25
+                                                kg_issue_data[i]=25
+                                            }
+                                            
+                                        }
+                                        else if(issue_count>=6 && issue_count<=12){
+                                            if (kg_issue_data[i] == issue_cache){
+                                            issue_cache=kg_issue_data[i]
+                                                kg_issue_data[i] = issue_cache_data
+                                            }
+                                            else{
+                                                issue_cache=kg_issue_data[i]
+                                                issue_cache_data=20
+                                                kg_issue_data[i]=20
+                                            }
+                                        }
+                                        else if(issue_count>=13 && issue_count<=20){
+
+                                            if (kg_issue_data[i] == issue_cache){
+                                                issue_cache=kg_issue_data[i]
+                                                kg_issue_data[i] = issue_cache_data
+                                            }
+                                            else{
+                                                issue_cache=kg_issue_data[i]
+                                                issue_cache_data=20
+                                                kg_issue_data[i]=20
+                                            }
+                                        }
+                                        else{
+                                            if (kg_issue_data[i] == issue_cache){
+                                                issue_cache=kg_issue_data[i]
+                                                kg_issue_data[i] = issue_cache_data
+                                            }
+                                            else{
+                                                issue_cache=kg_issue_data[i]
+                                                issue_cache_data=15
+                                                kg_issue_data[i]=15
+                                            }
+                                        }
+                                        issue_count+=1
+                                    
+                                    }
+                                    var bug_count = 1
+                                    var bug_cache = 0
+                                    var bug_cache_data = 0
+                                    for(var i in kg_bug_data){
+                                    
+                                        
+                                        
+                                        if (bug_count==1){
+                                            bug_cache=kg_bug_data[i]
+                                            bug_cache_data=20
+                                            kg_bug_data[i]=20
+                                            
+                                        }
+                                        else if(bug_count>=2 && bug_count<=5){
+                                            if (kg_bug_data[i] == bug_cache){
+                                                bug_cache=kg_bug_data[i]
+                                                kg_bug_data[i] = bug_cache_data
+                                            }
+                                            else{
+                                                bug_cache=kg_bug_data[i]
+                                                bug_cache_data=17
+                                                kg_bug_data[i]=17
+                                            }
+                                            
+                                        }
+                                        else if(bug_count>=6 && bug_count<=12){
+                                            if (kg_bug_data[i] == bug_cache){
+                                                bug_cache=kg_bug_data[i]
+                                                kg_bug_data[i] = bug_cache_data
+                                            }
+                                            else{
+                                                bug_cache=kg_bug_data[i]
+                                                bug_cache_data=13
+                                                kg_bug_data[i]=13
+                                            }
+                                
+                                        }
+                                        else if(bug_count>=13 && bug_count<=20){
+
+                                            if (kg_bug_data[i] == bug_cache){
+                                                bug_cache=kg_bug_data[i]
+                                                kg_bug_data[i] = bug_cache_data
+                                            }
+                                            else{
+                                                bug_cache=kg_bug_data[i]
+                                                bug_cache_data=13
+                                                kg_bug_data[i]=13
+                                            }
+                                          
+                                        }
+                                        else{
+                                            if (kg_bug_data[i] == bug_cache){
+                                                bug_cache=kg_bug_data[i]
+                                                kg_bug_data[i] = bug_cache_data
+                                            }
+                                            else{
+                                                bug_cache=kg_bug_data[i]
+                                                bug_cache_data=10
+                                                kg_bug_data[i]=10
+                                            }
+                                            
+                                        }
+                                        bug_count+=1
+                                    
+                                    }
+                                    console.log(zg_data_list);
+                                    console.log(kg_issue_data);
+                                    console.log(kg_bug_data);
+                                    
+                                    for(var i in zg_data_list){
+                                        if (i in kg_bug_data){
+                                            zg_data_list[i]+=kg_bug_data[i]
+                                        }
+                                        if (i in kg_issue_data){
+                                            zg_data_list[i]+=kg_issue_data[i]
+                                        }
+                                    }
+                                    console.log(zg_data_list);
+                                    var member_rank_list_name=[]
+                                    var member_rank_list_num=[]
+                                    for (var i in zg_data_list){
+                                        member_rank_list_name.push(i)
+                                        member_rank_list_num.push(zg_data_list[i])
+                                    }
+
+                                    for (var i=0;i<member_rank_list_num.length;i++){
+                                        for(var j=0;j<member_rank_list_num.length-i-1;j++){
+                                            if(member_rank_list_num[j]>member_rank_list_num[j+1]){
+                                                [member_rank_list_num[j],member_rank_list_num[j+1]]=[member_rank_list_num[j+1],member_rank_list_num[j]]
+                                                member_rank_list_name[j]=[member_rank_list_name[j+1],member_rank_list_name[j+1]=member_rank_list_name[j]][0]
+                                            }
+                                        }
+                                    }
+
+                                    zhget_data.zh_rank_echars_data.yAxis.data=member_rank_list_name
+                                    zhget_data.zh_rank_echars_data.series[0].data=member_rank_list_num
+                                    zhget_data.zh_rank_echars_data.title.subtext=`${year}年${Last_month}月`
+                                })
+                               
+                            })
+                        
+                      
+                        
+                        
+
+
+
+                        setTimeout(() => {
+                            var zh_rank_e = echarts.getInstanceByDom(document.getElementById("zh_rank_echars"))
+                            if (zh_rank_e == null) { // 如果不存在，就进行初始化
+                                zh_rank_e = echarts.init(document.getElementById("zh_rank_echars"));
+                            }
+                            zh_rank_e.setOption(zhget_data.zh_rank_echars_data,true);
+                        }, 1000);
                 }
                 function zh_member_choice(){
                     axios({
@@ -2953,19 +3230,35 @@
                     //     // )
                     // }
                     get_data.aa = get_data.prop_name.length-1
-                    setTimeout(() => {
+                    // setTimeout(() => {
               
-                        if(store.state.user_info["group"]=='游客组'){
+                    //     if(store.state.user_info["group"]=='游客组'){
                     
-                            get_data.zgshow=true
-                        }
-                        else{
+                    //         get_data.zgshow=true
+                    //     }
+                    //     else{
                            
-                            get_data.zgshow=true
-                            get_data.kgshow=true
-                            get_data.zhshow=true
-                        }
-                    }, 200);
+                    //         get_data.zgshow=true
+                    //         get_data.kgshow=true
+                    //         get_data.zhshow=true
+                    //     }
+                    // }, 1000);
+                    setInterval(() => {
+                       if(store.state.user_info!=null){
+                            if(store.state.user_info["group"]=='游客组'){
+                    
+                                get_data.zgshow=true
+                            }
+                            else{
+                            
+                                get_data.zgshow=true
+                                get_data.kgshow=true
+                                get_data.zhshow=true
+                            }
+                            return
+                       }
+                       console.log(1);
+                    }, 500);
                    
                     groupname()
                     
@@ -2991,33 +3284,17 @@
                         get_data.titleshow1=false
                         get_data.titleshow2=false
                         get_data.titleshow3=true
-                        
-                        
                         var myDate = new Date();
                         var year = myDate.getFullYear(); //获取当前年份(2位)
-                        console.log(year);
+                        
                         var Last_month = new Date().getMonth();
                         Last_month = ((Last_month == 0) ? (12) : (Last_month));
-                        console.log(Last_month);
-                        axios({
-                        url: '/api/v1/SubjectiveKpi/',
-                        method:'get',
-                        params:{
-                                date:year+"-"+Last_month
-                            }
-                        }).then(res => {
-                            console.log(res.data.data.kpi);
-                        })
                         
-                        setTimeout(() => {
-                            var zh_rank_e = echarts.getInstanceByDom(document.getElementById("zh_rank_echars"))
-                            if (zh_rank_e == null) { // 如果不存在，就进行初始化
-                                zh_rank_e = echarts.init(document.getElementById("zh_rank_echars"));
-                            }
-                            zh_rank_e.setOption(zhget_data.zh_rank_echars_data,true);
-                        }, 500);
+                        zh_echars1(year,Last_month)
+                        
                     }
                 }
+                
                 function groupleader(){
                     if (get_data.group_leader.length != 0){
                         get_data.created_show=true
@@ -3076,7 +3353,7 @@
                             }
                             get_data.group_options=data
                             get_data.shwb=lis
-                            console.log(get_data.shwb,111);
+                         
                         })
                 }
                 function groupchange(val){
@@ -3526,7 +3803,10 @@
                     zh_test,
                     zh_member_choice,
                     zh_setting,
-                    zh_close
+                    zh_close,
+                    getDaysInMonth,
+                    zh_echars1,
+                    zh_month_change
                 }
             }
         }

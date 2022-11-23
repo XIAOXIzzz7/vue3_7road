@@ -24,7 +24,10 @@
                   项目测试阶段报告
                 </el-button>
               </div>
-              <el-button @click="push()" size="small" type="primary">发送邮件</el-button>
+              <div>
+                <el-button @click="push()" size="small" type="primary">发送邮件</el-button>
+                <el-button @click="log()" size="small" text type="primary">log</el-button>
+              </div>
             </div>
           </template>
           <div style="display:flex;flex-direction: column;float: left;">
@@ -200,7 +203,9 @@ import { List } from 'echarts';
                 }
             })
     }
-
+    function log(){
+      window.open("/qa/email_log", '_blank')
+    }
     function  onReady( editor ) {
           // Insert the toolbar before the editable area.
           //     editor.ui.getEditableElement().parentElement.insertBefore(

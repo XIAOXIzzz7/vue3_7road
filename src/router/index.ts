@@ -46,6 +46,7 @@ import issue_okr_3 from "../components/issue_item/issue_okr_3.vue"
 import jump from "../components/jump.vue"
 import issue_sendemail from "../components/issue_item/issue_sendrmail.vue"
 import issue_emailconfig from "../components/issue_item/issue_emailconfig.vue"
+import email_log from "../components/issue_item/email_log.vue"
 
 const routes = [
   {
@@ -207,6 +208,11 @@ const routes = [
         meta:{
           KeepAlive:true
         }
+      },
+      {
+        path: 'email_log',
+        name: 'email_log',
+        component: email_log
       },
       {
         path: 'issueemailconfig',
