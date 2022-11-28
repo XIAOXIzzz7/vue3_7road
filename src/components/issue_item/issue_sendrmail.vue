@@ -1,7 +1,15 @@
 
   
 <template>
-
+<el-dialog style="width:70%;" v-model="data_set.dialogTableVisible" title="邮件日志">
+          <div style="display: flex;flex-direction: column;">
+            <el-button @click="deletelog()" style="float:left;margin:20px;width:200px">delete</el-button>
+            <el-button @click="checklog()" style="float:left;margin:20px;width:200px">check</el-button>
+        </div>
+        <div v-html="data_set.log" style="text-align:left;padding:20px;">
+            
+        </div>
+      </el-dialog>
 <el-button @click="check()">11</el-button>
   <div class="content">
     <div style="margin: 20px;">
@@ -73,7 +81,9 @@
         </el-card>
         
       </div>
+      
     </div>
+    
   </div>
 
   </template>
@@ -93,10 +103,12 @@
     import { ref,onMounted} from 'vue'
     import type { TabsPaneContext } from 'element-plus'
     import { objectEach, objectMap } from 'xe-utils';
-import { List } from 'echarts';
-
+    import { List } from 'echarts';
+    import {hdaxios} from "../../utils/request"
+    
     const data_set = reactive(
       {
+        dialogTableVisible:false,
         textData:"",
         SDK:`<p>Dear all,</p><p><span style="background-color:rgb(255,255,255);color:rgb(51,102,255);">一、服务端更新内容</span></p><p>&nbsp;</p><p><span style="background-color:rgb(255,255,255);color:rgb(0,0,0);">二、 影响程度：</span></p><p>&nbsp;</p><p><span style="background-color:rgb(255,255,255);color:rgb(0,0,0);">三、 影响的游戏:&nbsp;&nbsp;</span></p><p>&nbsp;</p><p><span style="background-color:rgb(255,255,255);color:rgb(0,0,0);">四、更新时间：</span></p><p>&nbsp;</p><p><span style="color:#ff0000;">&nbsp; &nbsp; &nbsp; &nbsp; 请运营同学确认后回复！</span><br><br><span style="background-color:rgb(255,255,255);color:rgb(0,0,0);">&nbsp; &nbsp; &nbsp; &nbsp; 以上，如有问题请及时反馈，谢谢！</span></p><p><span style="background-color:rgb(255,255,255);color:rgb(0,0,0);">&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</span>胡俊</p><p>&nbsp; &nbsp; &nbsp; &nbsp; 上海第七大道科技有限公司&nbsp;&nbsp;&nbsp;&nbsp;技术中心</p><p>&nbsp; &nbsp; &nbsp; &nbsp; Mob:&nbsp;+86&nbsp;13524778793</p><p><span style="background-color:rgb(255,255,255);color:rgb(0,0,0);">&nbsp; &nbsp; &nbsp; &nbsp;&nbsp;</span><a href="mailto:jun.hu@7road.com"><span style="background-color:rgb(255,255,255);color:rgb(0,0,0);">mailto:jun.hu@7road.com</span></a></p><p><span style="background-color:rgb(255,255,255);color:rgb(0,0,0);">&nbsp; &nbsp; &nbsp; &nbsp; Add：上海市闵行区合川路3111号2号楼7楼</span></p>`,
         stage:`<p><span style="font-size:30px;"><strong>Dear all,</strong></span></p><p>&nbsp;</p><p>&nbsp;</p><p><span style="background-color:hsl(240,75%,60%);color:hsl(0,0%,100%);font-size:21px;"><strong>一、S6阶段测试情况：</strong></span></p><p>&nbsp;</p><p>&nbsp;</p><p><span style="background-color:hsl(240,75%,60%);color:hsl(0,0%,100%);font-size:21px;"><strong>二、版本控制风险：</strong></span></p><p>&nbsp;</p><p><span style="background-color:hsl(240,75%,60%);color:hsl(0,0%,100%);font-size:21px;"><strong>三、测试详情：</strong></span></p><figure class="table" style="float:left;width:100%;"><table style="background-color:rgb(255, 255, 255);"><tbody><tr><td style="border-bottom-style:none;border-left:1pt solid rgb(189, 215, 238);border-right-style:none;border-top:1pt solid rgb(189, 215, 238);height:20.25pt;padding-left:1px;padding-right:1px;padding-top:1px;text-align:center;width:703pt;" colspan="5">功能专项验收详情如下：</td></tr><tr><td style="background-color:rgb(149, 179, 215);border-bottom:0.5pt solid windowtext;border-left:0.5pt solid windowtext;border-right-style:none;border-top:0.5pt solid windowtext;height:16.5pt;padding-left:1px;padding-right:1px;padding-top:1px;text-align:center;width:162pt;"><strong>测试类型</strong></td><td style="background-color:rgb(149, 179, 215);border-bottom-style:none;border-left:0.5pt solid windowtext;border-right:0.5pt solid windowtext;border-top:0.5pt solid windowtext;padding-left:1px;padding-right:1px;padding-top:1px;text-align:center;width:162pt;"><strong>当前状况</strong></td><td style="background-color:rgb(149, 179, 215);border-bottom-style:none;border-left:0.5pt solid windowtext;border-right-style:none;border-top-style:none;padding-left:1px;padding-right:1px;padding-top:1px;text-align:center;width:185pt;"><strong>问题详情</strong></td><td style="background-color:rgb(149, 179, 215);border-bottom-style:none;border-left:0.5pt solid windowtext;border-right:0.5pt solid windowtext;border-top:0.5pt solid windowtext;padding-left:1px;padding-right:1px;padding-top:1px;text-align:center;width:54pt;"><strong>质量风险</strong></td><td style="background-color:rgb(252, 228, 214);border-bottom-style:none;border-left:0.5pt solid windowtext;border-right-style:none;border-top:0.5pt solid windowtext;padding-left:1px;padding-right:1px;padding-top:1px;text-align:center;width:140pt;"><i><strong>S6评估标准</strong></i></td></tr><tr><td style="border:0.5pt solid windowtext;height:177.75pt;padding:10px;text-align:center;">游戏功能</td><td style="border:0.5pt solid windowtext;padding:10px;">&nbsp;</td><td style="border:0.5pt solid windowtext;padding:10px;">&nbsp;</td><td style="border:0.5pt solid windowtext;padding:10px;text-align:center;">&nbsp;</td><td style="border:0.5pt solid windowtext;padding:10px;width:140pt;" rowspan="5"><span style="background-color:rgb(255,255,255);color:rgb(0,0,0);">功能测试结果所有S级、A级bug必须修复，遗留未处理的B级bug占比不高于10%</span></td></tr><tr><td style="border:0.5pt solid windowtext;height:33pt;padding:10px;text-align:center;width:162pt;">中断测试</td><td style="border:0.5pt solid windowtext;padding:10px;width:162pt;">&nbsp;</td><td style="border:0.5pt solid windowtext;padding:10px;text-align:center;width:185pt;">&nbsp;</td><td style="border:0.5pt solid windowtext;padding:10px;text-align:center;">&nbsp;</td></tr><tr><td style="border:0.5pt solid windowtext;height:33.6pt;padding:10px;text-align:center;width:162pt;">画质测试</td><td style="border:0.5pt solid windowtext;padding:10px;width:162pt;">&nbsp;</td><td style="border:0.5pt solid windowtext;padding:10px;text-align:center;width:185pt;">&nbsp;</td><td style="border:0.5pt solid windowtext;padding:10px;text-align:center;">&nbsp;</td></tr><tr><td style="border:0.5pt solid windowtext;height:24.95pt;padding:10px;text-align:center;width:162pt;">覆盖安装测试</td><td style="border:0.5pt solid windowtext;padding:10px;width:162pt;">&nbsp;</td><td style="border:0.5pt solid windowtext;padding:10px;text-align:center;width:185pt;">&nbsp;</td><td style="border:0.5pt solid windowtext;padding:10px;text-align:center;">&nbsp;</td></tr><tr><td style="border:0.5pt solid windowtext;height:36pt;padding:10px;text-align:center;width:162pt;">热更新测试</td><td style="border:0.5pt solid windowtext;padding:10px;width:162pt;">&nbsp;</td><td style="border:0.5pt solid windowtext;padding:10px;width:185pt;">&nbsp;</td><td style="border:0.5pt solid windowtext;padding:10px;">&nbsp;</td></tr></tbody></table></figure><figure class="table" style="float:left;width:100%;"><table style="background-color:rgb(255, 255, 255);"><tbody><tr><td style="border-bottom:0.5pt solid windowtext;border-left:0.5pt solid windowtext;border-right-color:initial;border-right-style:none;border-top:0.5pt solid windowtext;height:16.5pt;padding-left:1px;padding-right:1px;padding-top:1px;text-align:center;width:1169pt;" colspan="5">2、其他技术专项验收情况如下：</td></tr><tr><td style="background-color:rgb(149, 179, 215);border-bottom:0.5pt solid windowtext;border-left:0.5pt solid windowtext;border-right-style:none;border-top:0.5pt solid windowtext;height:15pt;padding-left:1px;padding-right:1px;padding-top:1px;text-align:center;width:122pt;"><strong>测试类型</strong></td><td style="background-color:rgb(149, 179, 215);border-bottom:0.5pt solid windowtext;border-left:0.5pt solid windowtext;border-right-style:none;border-top:0.5pt solid windowtext;padding-left:1px;padding-right:1px;padding-top:1px;text-align:center;width:572pt;"><strong>当前状况</strong></td><td style="background-color:rgb(149, 179, 215);border-bottom:0.5pt solid windowtext;border-left:0.5pt solid windowtext;border-right-style:none;border-top:0.5pt solid windowtext;padding-left:1px;padding-right:1px;padding-top:1px;text-align:center;width:221pt;"><strong>主要问题&amp;建议</strong></td><td style="background-color:rgb(149, 179, 215);border:0.5pt solid windowtext;padding-left:1px;padding-right:1px;padding-top:1px;text-align:center;width:54pt;"><strong>质量风险</strong></td><td style="background-color:rgb(252, 228, 214);border:0.5pt solid windowtext;padding-left:1px;padding-right:1px;padding-top:1px;width:200pt;"><i><strong>S6估标准</strong></i></td></tr><tr><td style="height:391.5pt;padding:10px;text-align:center;">前端性能</td><td style="padding:10px;">&nbsp;</td><td style="padding:10px;">&nbsp;</td><td style="padding:10px;text-align:center;">&nbsp;</td><td style="padding:10px;">Ø最高 PSS（Android）：<br>1 档机&lt;=1600M;<br>2 档机&lt;=1400M;<br>3 档机&lt;=1200M<br>最高 PSS（iOS）：<br>1 档机&lt;=1200M;<br>2 档机&lt;=1000M;<br>3档机&lt;=900M<br>Ø.CPU 使用率小于 60%占比（Android）：&gt;90%<br>CPU 使用率小于 80%占比（iOS）：&gt;90%;<br><br>Ø.85%FPS（Android）:<br>1 档机&gt;=25;<br>2 档机&gt;=25;<br>3档机&gt;=18；<br>90%FPS（iOS）:<br>1 档机&gt;=25;<br>2 档机&gt;=25;<br>3 档机&gt;=18</td></tr><tr><td style="height:115.5pt;padding:10px;text-align:center;">兼容性</td><td style="padding:10px;">&nbsp;</td><td style="padding:10px;">&nbsp;</td><td style="padding:10px;">&nbsp;</td><td style="padding:10px;"><p><span style="background-color:transparent;">1.第三方机型兼容通过率需达标&gt;=95%</span></p><p>2.Android&amp;iOS 市场<br>占有率 Top10 机型全部通过测试&amp;不得有 S、A 级兼容 bug</p></td></tr><tr><td style="height:99pt;padding:10px;text-align:center;">弱网</td><td style="padding:10px;">&nbsp;</td><td style="padding:10px;">&nbsp;</td><td style="padding:10px;text-align:center;">&nbsp;</td><td style="padding:10px;">在游戏设计支持的最大网络延迟、丢包率（不同游戏类型对弱网要求不同）、抖动的场景下，需对延时的有合理的提示</td></tr><tr><td style="height:105.75pt;padding:10px;text-align:center;">压力测试</td><td style="padding:10px;">&nbsp;</td><td style="padding:10px;">&nbsp;</td><td style="padding:10px;text-align:center;">&nbsp;</td><td style="padding:10px;"><p>承载、业务逻辑、稳定性压测</p><p>１.核心场景性能基线需达标：各事务95%响应时间&lt;800ms<br>２.综合场景稳定性测试：机器人无掉线，服务进程无Crash，无内存泄漏，运行24小时以上后各事务成功率&gt;99.9%，各节点负载要实现均衡<br><br>容错测试<br>１.被拉起节点或进程负载不能存在异常，玩家游戏数据尽可能少丢失，丢失数据时长不超过3分钟<br><br>动态扩容<br>1.分布式部署的服务进程需满足不停服新增节点服务器，新增节点加入后符合原先的负载均衡算法且新登录的用户流量会平滑的分流到新扩容的服务上<br><br>排队系统<br>在S5开新服阶段为预防出现爆发性新用户涌入及登录，需要设计并测试排队系统，控制用户流量，维护游戏服务正常运行，保障玩家游戏体验<br><br>容灾测试<br>项目组必须有容灾计划，在发生设备故障、网络故障等灾难，在保证玩家数据尽可能少丢失的前提下，尽快恢复正常服务<br>&nbsp;</p></td></tr><tr><td style="height:162pt;padding:10px;text-align:center;" rowspan="5">容错测试</td><td style="padding:10px;" rowspan="5">&nbsp;</td><td style="padding:10px;" rowspan="5">&nbsp;</td><td style="padding:10px;text-align:center;" rowspan="5">&nbsp;</td><td style="padding:10px;">1.在大压力下根据具体用例杀死相关服务进程，测试被杀进程是否可自动拉起</td></tr><tr><td style="height:14.25pt;padding:10px;">&nbsp;</td></tr><tr><td style="height:41.25pt;padding:10px;">2.拉起后是不能存在因为进程启动的异常顺序等原因引发的逻辑错误等问题</td></tr><tr><td style="height:14.25pt;padding:10px;">&nbsp;</td></tr><tr><td style="height:51pt;padding:10px;">3.被拉起节点或进程负载不能存在异常，玩家游戏数据尽可能少丢失，丢失数据时长不超过 5 分钟</td></tr></tbody></table></figure><p>&nbsp;</p><figure class="table"><table style="border:1px solid hsl(0, 0%, 100%);"><tbody><tr><td style="border:1px solid hsl(0, 0%, 100%);"><p><span style="background-color:rgb(255,255,255);color:rgb(0,0,0);">以上，有劳查阅，如有疑问，请随时联系，谢谢！</span></p><p>胡俊</p><p>上海第七大道科技有限公司&nbsp;&nbsp;&nbsp;&nbsp;技术中心</p><p>Mob:&nbsp;+86&nbsp;13524778793</p><p><a href="mailto:jun.hu@7road.com"><span style="background-color:rgb(255,255,255);color:rgb(0,0,0);">mailto:jun.hu@7road.com</span></a></p><p><span style="background-color:rgb(255,255,255);color:rgb(0,0,0);">Add：上海市闵行区合川路3111号2号楼7楼</span></p></td></tr></tbody></table></figure>`,
@@ -204,7 +216,32 @@ import { List } from 'echarts';
             })
     }
     function log(){
-      window.open("/qa/email_log", '_blank')
+      checklog()
+      data_set.dialogTableVisible=true
+    }
+    function checklog(){
+        axios({
+            url: '/api/v1/EmailLog/',
+            method:'get',
+            })
+            .then(res => {
+               data_set.log=res.data.data
+              
+               
+            })
+    }
+    function deletelog(){
+        hdaxios("/api/v1/EmailLog/",{
+            })
+                .then(res => {
+                    console.log(res);
+                    ElMessage({
+                        message: '删除成功',
+                        type: 'success',
+                        
+                    })
+                    check()
+                })
     }
     function  onReady( editor ) {
           // Insert the toolbar before the editable area.
@@ -253,19 +290,36 @@ import { List } from 'echarts';
             .then(res => {
                
                 data_set.log = res
-                if(res.data.msg != "发送邮件成功"){
-                    console.log("1111111111111");
-                    
-          
-                    ElMessage.error(res.data.msg)
-                }
-                
-                if (res.data.msg == "发送邮件成功"){
-                    ElMessage({
-                        message: '发送邮件成功',
+                if(res.data.msg.indexOf("发送邮件成功")!= -1){
+                  ElMessage({
+                        duration:0,
+                        showClose: true,
+                        message: res.data.msg,
                         type: 'success',
                     })
                 }
+                else{
+                  ElMessage({
+                    showClose: true,
+                    duration:0,
+                    message: res.data.msg,
+                    type: 'error',
+                  })
+                  ElMessage.error(res.data.msg)
+                }
+                // if(res.data.msg != "发送邮件成功"){
+                //     console.log("1111111111111");
+                    
+          
+                //     ElMessage.error(res.data.msg)
+                // }
+                
+                // if (res.data.msg == "发送邮件成功"){
+                //     ElMessage({
+                //         message: '发送邮件成功',
+                //         type: 'success',
+                //     })
+                // }
             })
         })
         .catch(() => {

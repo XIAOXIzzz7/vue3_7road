@@ -2865,6 +2865,7 @@ export default defineComponent({
             },
         ],
         Project_analysis_Data_2:{
+
                 tooltip: {
                     trigger: 'axis',
                     axisPointer: {
@@ -3772,6 +3773,108 @@ export default defineComponent({
                                     series_data.push(lis)
                                    
                                 }
+                                for(var i in series_data){
+                                    for(var j in series_data[i]){
+                                        if(series_data[i]["name"]=='总数'){
+                                            series_data[i]['itemStyle']={
+                                                normal:{
+                                                    color:"#3366FF"
+                                                }
+                                            }
+                                        }
+                                        else if(series_data[i]["name"]=='致命'){
+                                            series_data[i]['itemStyle']={
+                                                normal:{
+                                                    color:"#FF0000"
+                                                }
+                                            }
+                                        }
+                                        else if(series_data[i]["name"]=='严重'){
+                                            series_data[i]['itemStyle']={
+                                                normal:{
+                                                    color:"#FF6600"
+                                                }
+                                            }
+                                        }
+                                        else if(series_data[i]["name"]=='一般'){
+                                            series_data[i]['itemStyle']={
+                                                normal:{
+                                                    color:"#FFCC00"
+                                                }
+                                            }
+                                        }
+                                        else if(series_data[i]["name"]=='提示'){
+                                            series_data[i]['itemStyle']={
+                                                normal:{
+                                                    color:"#CCFF99"
+                                                }
+                                            }
+                                        }
+                                        else if(series_data[i]["name"]=='建议'){
+                                            series_data[i]['itemStyle']={
+                                                normal:{
+                                                    color:"#99CC66"
+                                                }
+                                            }
+                                        }
+                                        else if(series_data[i]["name"]=='遗留'){
+                                            series_data[i]['itemStyle']={
+                                                normal:{
+                                                    color:"#FF9900"
+                                                }
+                                            }
+                                        }
+                                        else if(series_data[i]["name"]=='回归失败'){
+                                            series_data[i]['itemStyle']={
+                                                normal:{
+                                                    color:"#FF6666"
+                                                }
+                                            }
+                                        }
+                                        else if(series_data[i]["name"]=='重启'){
+                                            series_data[i]['itemStyle']={
+                                                normal:{
+                                                    color:"#FF9966 "
+                                                }
+                                            }
+                                        }
+                                        else if(series_data[i]["name"]=='未关闭'){
+                                            series_data[i]['itemStyle']={
+                                                normal:{
+                                                    color:"#FF33CC"
+                                                }
+                                            }
+                                        }
+                                        else if(series_data[i]["name"]=='待处理'){
+                                            series_data[i]['itemStyle']={
+                                                normal:{
+                                                    color:"#FF9933"
+                                                }
+                                            }
+                                        }
+                                        else if(series_data[i]["name"]=='已关闭'){
+                                            series_data[i]['itemStyle']={
+                                                normal:{
+                                                    color:"#999999"
+                                                }
+                                            }
+                                        }
+                                        else if(series_data[i]["name"]=='卡死'){
+                                            series_data[i]['itemStyle']={
+                                                normal:{
+                                                    color:"#990000"
+                                                }
+                                            }
+                                        }
+                                        else if(series_data[i]["name"]=='挂起'){
+                                            series_data[i]['itemStyle']={
+                                                normal:{
+                                                    color:"#FFCCCC"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                                 var options = []
                                 for (var i in res.data.data.versions){
                                     options.push(
@@ -3958,6 +4061,108 @@ export default defineComponent({
                                     }
                                     series_data.push(lis)
                                    
+                                }
+                                for(var i in series_data){
+                                    for(var j in series_data[i]){
+                                        if(series_data[i]["name"]=='总数'){
+                                            series_data[i]['itemStyle']={
+                                                normal:{
+                                                    color:"#3366FF"
+                                                }
+                                            }
+                                        }
+                                        else if(series_data[i]["name"]=='致命'){
+                                            series_data[i]['itemStyle']={
+                                                normal:{
+                                                    color:"#FF0000"
+                                                }
+                                            }
+                                        }
+                                        else if(series_data[i]["name"]=='严重'){
+                                            series_data[i]['itemStyle']={
+                                                normal:{
+                                                    color:"#FF6600"
+                                                }
+                                            }
+                                        }
+                                        else if(series_data[i]["name"]=='一般'){
+                                            series_data[i]['itemStyle']={
+                                                normal:{
+                                                    color:"#FFCC00"
+                                                }
+                                            }
+                                        }
+                                        else if(series_data[i]["name"]=='提示'){
+                                            series_data[i]['itemStyle']={
+                                                normal:{
+                                                    color:"#CCFF99"
+                                                }
+                                            }
+                                        }
+                                        else if(series_data[i]["name"]=='建议'){
+                                            series_data[i]['itemStyle']={
+                                                normal:{
+                                                    color:"#99CC66"
+                                                }
+                                            }
+                                        }
+                                        else if(series_data[i]["name"]=='遗留'){
+                                            series_data[i]['itemStyle']={
+                                                normal:{
+                                                    color:"#FF9900"
+                                                }
+                                            }
+                                        }
+                                        else if(series_data[i]["name"]=='回归失败'){
+                                            series_data[i]['itemStyle']={
+                                                normal:{
+                                                    color:"#FF6666"
+                                                }
+                                            }
+                                        }
+                                        else if(series_data[i]["name"]=='重启'){
+                                            series_data[i]['itemStyle']={
+                                                normal:{
+                                                    color:"#FF9966 "
+                                                }
+                                            }
+                                        }
+                                        else if(series_data[i]["name"]=='未关闭'){
+                                            series_data[i]['itemStyle']={
+                                                normal:{
+                                                    color:"#FF33CC"
+                                                }
+                                            }
+                                        }
+                                        else if(series_data[i]["name"]=='待处理'){
+                                            series_data[i]['itemStyle']={
+                                                normal:{
+                                                    color:"#FF9933"
+                                                }
+                                            }
+                                        }
+                                        else if(series_data[i]["name"]=='已关闭'){
+                                            series_data[i]['itemStyle']={
+                                                normal:{
+                                                    color:"#999999"
+                                                }
+                                            }
+                                        }
+                                        else if(series_data[i]["name"]=='卡死'){
+                                            series_data[i]['itemStyle']={
+                                                normal:{
+                                                    color:"#990000"
+                                                }
+                                            }
+                                        }
+                                        else if(series_data[i]["name"]=='挂起'){
+                                            series_data[i]['itemStyle']={
+                                                normal:{
+                                                    color:"#FFCCCC"
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
 
 
@@ -4717,6 +4922,110 @@ export default defineComponent({
                                     series_data.push(lis)
                                    
                                 }
+
+                                for(var i in series_data){
+                                    for(var j in series_data[i]){
+                                        if(series_data[i]["name"]=='总数'){
+                                            series_data[i]['itemStyle']={
+                                                normal:{
+                                                    color:"#3366FF"
+                                                }
+                                            }
+                                        }
+                                        else if(series_data[i]["name"]=='致命'){
+                                            series_data[i]['itemStyle']={
+                                                normal:{
+                                                    color:"#FF0000"
+                                                }
+                                            }
+                                        }
+                                        else if(series_data[i]["name"]=='严重'){
+                                            series_data[i]['itemStyle']={
+                                                normal:{
+                                                    color:"#FF6600"
+                                                }
+                                            }
+                                        }
+                                        else if(series_data[i]["name"]=='一般'){
+                                            series_data[i]['itemStyle']={
+                                                normal:{
+                                                    color:"#FFCC00"
+                                                }
+                                            }
+                                        }
+                                        else if(series_data[i]["name"]=='提示'){
+                                            series_data[i]['itemStyle']={
+                                                normal:{
+                                                    color:"#CCFF99"
+                                                }
+                                            }
+                                        }
+                                        else if(series_data[i]["name"]=='建议'){
+                                            series_data[i]['itemStyle']={
+                                                normal:{
+                                                    color:"#99CC66"
+                                                }
+                                            }
+                                        }
+                                        else if(series_data[i]["name"]=='遗留'){
+                                            series_data[i]['itemStyle']={
+                                                normal:{
+                                                    color:"#FF9900"
+                                                }
+                                            }
+                                        }
+                                        else if(series_data[i]["name"]=='回归失败'){
+                                            series_data[i]['itemStyle']={
+                                                normal:{
+                                                    color:"#FF6666"
+                                                }
+                                            }
+                                        }
+                                        else if(series_data[i]["name"]=='重启'){
+                                            series_data[i]['itemStyle']={
+                                                normal:{
+                                                    color:"#FF9966 "
+                                                }
+                                            }
+                                        }
+                                        else if(series_data[i]["name"]=='未关闭'){
+                                            series_data[i]['itemStyle']={
+                                                normal:{
+                                                    color:"#FF33CC"
+                                                }
+                                            }
+                                        }
+                                        else if(series_data[i]["name"]=='待处理'){
+                                            series_data[i]['itemStyle']={
+                                                normal:{
+                                                    color:"#FF9933"
+                                                }
+                                            }
+                                        }
+                                        else if(series_data[i]["name"]=='已关闭'){
+                                            series_data[i]['itemStyle']={
+                                                normal:{
+                                                    color:"#999999"
+                                                }
+                                            }
+                                        }
+                                        else if(series_data[i]["name"]=='卡死'){
+                                            series_data[i]['itemStyle']={
+                                                normal:{
+                                                    color:"#990000"
+                                                }
+                                            }
+                                        }
+                                        else if(series_data[i]["name"]=='挂起'){
+                                            series_data[i]['itemStyle']={
+                                                normal:{
+                                                    color:"#FFCCCC"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                console.log(2222,series_data);
                                 var options = []
                                 for (var i in res.data.data.versions){
                                     options.push(

@@ -53,9 +53,15 @@ const routes = [
     path: '/login/',
     component: road7login
   },
+  
   {
     path: '/test12',
     component: test
+  },
+  {
+    path: '/email_log',
+    name: '/email_log',
+    component: email_log
   },
   {
     path: '/issueokr/2',
@@ -209,11 +215,7 @@ const routes = [
           KeepAlive:true
         }
       },
-      {
-        path: 'email_log',
-        name: 'email_log',
-        component: email_log
-      },
+      
       {
         path: 'issueemailconfig',
         name: 'issueemailconfig',

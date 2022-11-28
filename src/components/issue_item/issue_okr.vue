@@ -1384,6 +1384,13 @@
                                     zhget_data.zh_rank_echars_data.yAxis.data=member_rank_list_name
                                     zhget_data.zh_rank_echars_data.series[0].data=member_rank_list_num
                                     zhget_data.zh_rank_echars_data.title.subtext=`${year}年${Last_month}月`
+                                 
+                                    var zh_rank_e = echarts.getInstanceByDom(document.getElementById("zh_rank_echars"))
+                                    if (zh_rank_e == null) { // 如果不存在，就进行初始化
+                                        zh_rank_e = echarts.init(document.getElementById("zh_rank_echars"));
+                                    }
+                                    zh_rank_e.setOption(zhget_data.zh_rank_echars_data,true);
+                          
                                 })
                                
                             })
@@ -1394,13 +1401,7 @@
 
 
 
-                        setTimeout(() => {
-                            var zh_rank_e = echarts.getInstanceByDom(document.getElementById("zh_rank_echars"))
-                            if (zh_rank_e == null) { // 如果不存在，就进行初始化
-                                zh_rank_e = echarts.init(document.getElementById("zh_rank_echars"));
-                            }
-                            zh_rank_e.setOption(zhget_data.zh_rank_echars_data,true);
-                        }, 1000);
+                       
                 }
                 function zh_member_choice(){
                     axios({
@@ -2663,7 +2664,7 @@
                             project:"all",
                             start:kgget_data.kg_starttime,
                             end:kgget_data.kg_endtime,
-                            _type:"fx",
+                            _type:"all",
                             member:kgget_data.kgselect[2],
                             iteration:"所有迭代"
                             }
