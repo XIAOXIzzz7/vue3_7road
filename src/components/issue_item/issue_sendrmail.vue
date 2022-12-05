@@ -3,8 +3,8 @@
 <template>
 <el-dialog style="width:70%;" v-model="data_set.dialogTableVisible" title="邮件日志">
           <div style="display: flex;flex-direction: column;">
-            <el-button @click="deletelog()" style="float:left;margin:20px;width:200px">delete</el-button>
-            <el-button @click="checklog()" style="float:left;margin:20px;width:200px">check</el-button>
+            <el-button @click="deletelog()" style="float:left;margin:20px;width:200px">清空</el-button>
+            <el-button @click="checklog()" style="float:left;margin:20px;width:200px">刷新</el-button>
         </div>
         <div v-html="data_set.log" style="text-align:left;padding:20px;">
             
@@ -21,7 +21,7 @@
     <el-table-column prop="title" label="收件组" min-width="30" />
     <el-table-column prop="text" label="标题" min-width="30" />
    
-    <el-table-column fixed="right" label="Operations" min-width="20">
+    <el-table-column fixed="right" label="操作" min-width="20">
       <template #default="scope">
         <el-button
           link
@@ -69,7 +69,7 @@
                 <el-button @click="push()" size="small" type="primary">发送邮件</el-button>
                 <el-button @click="saveDraft()" size="small" type="primary">存草稿</el-button>
                 <el-button @click="draft()" size="small" text type="primary">草稿箱</el-button>
-                <el-button @click="log()" size="small" text type="primary">log</el-button>
+                <el-button @click="log()" size="small" text type="primary">日志</el-button>
               </div>
             </div>
           </template>
@@ -448,24 +448,17 @@
                   })
                   ElMessage.error(res.data.msg)
                 }
-                // if(res.data.msg != "发送邮件成功"){
-                //     console.log("1111111111111");
-                    
-          
-                //     ElMessage.error(res.data.msg)
-                // }
-                
-                // if (res.data.msg == "发送邮件成功"){
-                //     ElMessage({
-                //         message: '发送邮件成功',
-                //         type: 'success',
-                //     })
-                // }
             })
-        })
-        .catch(() => {
-          
-          
+            .catch(error => {
+              ElMessage({
+                    showClose: true,
+                    duration:0,
+                    message: error,
+                    type: 'error',
+                  })
+                  ElMessage.error(error)
+              })
+
         })
       }else{
         console.log(data_set.excel);
@@ -512,6 +505,15 @@
                   ElMessage.error(res.data.msg)
                 }
         })
+        .catch(error => {
+              ElMessage({
+                    showClose: true,
+                    duration:0,
+                    message: error,
+                    type: 'error',
+                  })
+                  ElMessage.error(error)
+              })
       }
    }
    
