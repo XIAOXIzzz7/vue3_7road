@@ -43,7 +43,7 @@
     </el-table-column>
   </el-table>
       </el-dialog>
-<el-button @click="check()">11</el-button>
+<!-- <el-button @click="check()">11</el-button> -->
   <div class="content">
     <div style="margin: 20px;">
       <div style="display:flex;">
@@ -52,10 +52,10 @@
             <div class="card-header" style="background-color: white;">
               <div style="display:flex;">
                 <el-button text disabled>配置发送内容</el-button>
-                <el-button text @click="data_set.editorData=data_set.test_issue">
+                <!-- <el-button text @click="data_set.editorData=data_set.test_issue">
                     渠道测试需求
-                </el-button>
-                <el-button text @click="data_set.editorData=data_set.SDK">
+                </el-button> -->
+                <!-- <el-button text @click="data_set.editorData=data_set.SDK">
                   SDK服务端更新
                 </el-button>
                 <el-button text @click="data_set.editorData=data_set.performance">
@@ -63,7 +63,7 @@
                 </el-button>
                 <el-button text @click="data_set.editorData=data_set.stage">
                   项目测试阶段报告
-                </el-button>
+                </el-button> -->
               </div>
               <div>
                 <el-button @click="push()" size="small" type="primary">发送邮件</el-button>

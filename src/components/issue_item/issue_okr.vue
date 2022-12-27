@@ -995,10 +995,71 @@
 
                         </el-card>
                         <div style="flex: 0 0 2%"></div>
-                        <el-card shadow="hover" style="height:400px;min-height:400px;padding:20px;flex: 0 0 48%;" id="zh_rank_echars"></el-card>
+                        <el-card v-loading="zh_echar_loading" element-loading-text="拼命加载中" shadow="hover" style="height:400px;min-height:400px;padding:20px;flex: 0 0 48%;" id="zh_rank_echars"></el-card>
                     </div>
+                    <el-divider content-position="left">Personnel statistics</el-divider>
+                        <el-card shadow="hover" style="height:500px;"> 
+                            <el-table :default-sort="{ prop: 'date', order: 'descending' }" v-loading="zh_loading" element-loading-text="拼命加载中" :data="zh_tableData" style="width: 100%" height="400">
+                                <el-table-column label="id" prop="id" min-width="5">
+                                </el-table-column>
+                                <el-table-column label="姓名" prop="name" min-width="10">
+                                </el-table-column>
+                                <el-table-column label="所属组" prop="group" min-width="10">
+                                </el-table-column>
+                                <el-table-column label="完成需求总分" sortable prop="all_score" min-width="20">
+                                </el-table-column>
+                                <el-table-column label="完成需求年度分数" sortable prop="year_score" min-width="20">
+                                </el-table-column>
+                                <el-table-column label="完成需求总数" sortable prop="issue_count" min-width="20">
+                                </el-table-column>
+                                <el-table-column label="需求延迟次数" sortable prop="delay_count" min-width="20">
+                                </el-table-column>
+                                <el-table-column min-width="20">
+                                <template #header>
+                                    <div style="display: flex;justify-content: space-between;">
+                                        <el-select v-model="zh_year" @change="zh_apiresponse()" class="m-2" placeholder="Select">
+                                            <el-option
+                                            v-for="item in zh_year_options"
+                                            :key="item.value"
+                                            :label="item.label"
+                                            :value="item.value"
+                                            />
+                                        </el-select>
+                                        <el-input @change="zh_apiresponse()" style="width:214px;height: 32px;margin:8px" v-model="zh_search" placeholder="搜索">
+                                
+                                        </el-input>
+                                    </div>
+                                </template>
+                                <template #default="scope">
+                                    <el-button
+                                    size="small"
+                                    type="danger"
+                                    @click="zh_memberinfo(scope.row.name)"
+                                    >查看</el-button
+                                    >
+                                </template>
+                                </el-table-column>
+                            </el-table>
+                            <div class="block" style="margin-top:20px">
+                                <el-pagination
+                                @size-change="zh_handleSizeChange()"
+                                @current-change="zh_handleCurrentChange()"
+                                v-model:currentPage="zh_page"
+                                :current-page= zh_page
+                                :page-size= zh_page_size
+                                layout="total, prev, pager, next"
+                                :total= zh_api_sum
+                                
+                                >
+                                </el-pagination>
+                            </div>
+                        </el-card>
                 </el-card>
+               
             </div>
+            <el-dialog  style="margin-top: 12%; height: 400px;width: 70%;" v-model="zh_member_info" title="成员详情图">
+                <div v-loading="zh_meminfo_loading" element-loading-text="拼命加载中" style="height:300px; min-height:300px;" id="zh_memberinfo_echar"></div>
+            </el-dialog>
         </div>
     </div>
     </template>
@@ -1014,9 +1075,9 @@
     import {useStore} from 'vuex'
     import {hpaxios} from "../../utils/request"
     import { StarFilled } from '@element-plus/icons-vue'
+    import { useRouter } from "vue-router";
     import {hputaxios} from "../../utils/request"
-    import {
-         useRouter } from "vue-router";
+    const router = useRouter()
             export default{
             setup(){
                 // 综合评价
@@ -1135,10 +1196,104 @@
                         zh_select:"",
                         zh_month_select:"",
                         zh_setting_show:true,
-                        zh_close_show:false
+                        zh_close_show:false,
+                        zh_tableData:[],
+                        zh_loading:true,
+                        zh_year_options:[
+                            {
+                                value:2020,
+                                label: '2020年度'
+                            },
+                            {
+                                value:2021,
+                                label: '2021年度'
+                            },
+                            {
+                                value:2022,
+                                label: '2022年度'
+                            },
+                        ],
+                        zh_year:2022,
+                        zh_search:"",
+                        zh_page:1,
+                        zh_page_size:10,
+                        zh_api_sum:0,
+                        zh_echar_loading:true,
+                        zh_member_info:false,
+                        zh_meminfo_loading:true
 
                     }
                 )
+                function zh_apiresponse(){
+                    zhget_data.zh_loading = true
+                    axios({
+                    url: '/api/v1/MemberScoreTable/',
+                    method:'get',
+                    params:{
+                        year:JSON.stringify(zhget_data.zh_year),
+                        page:JSON.stringify(zhget_data.zh_page),
+                        page_size:JSON.stringify(zhget_data.zh_page_size),
+                        search:zhget_data.zh_search
+                        
+                        },
+                    }).then(res => {
+                        console.log(res.data.data.page_data);
+                            zhget_data.zh_tableData=res.data.data.page_data
+                            zhget_data.zh_api_sum=res.data.data.search_sum 
+                            zhget_data.zh_loading = false
+                        })
+        
+            
+                }
+                function zh_memberinfo(row){
+                    
+                    zhget_data.zh_member_info=true
+                    zhget_data.zh_meminfo_loading=true
+                   
+                    axios({
+                            url: '/api/v1/MemberScoreChartData/',
+                            method:'get',
+                            params:{
+                                year:zhget_data.zh_year,
+                                member:row
+                                }
+                            })
+                            .then(res => {
+                                var member_info =res.data.data.member_info
+                                var data_list =res.data.data.date_list
+                                axios({
+                                    url: '/api/v1/Echarts/',
+                                    method:'get',
+                                    params:{
+                                        title:row+" "+zhget_data.zh_year+"年度数据统计",
+                                        echarts_type:'line',
+                                        series_option:{"smooth": "True", "seriesLayoutBy": "row", "barWidth" : 60,label:{show: true,"formatter": '{c}'}},
+                                        series_data:member_info,
+                                        xAxis:JSON.stringify(data_list),
+                                        color:JSON.stringify(['#409EFF90', '#ff4242', '#318C80', "#51D9B5", '#A6E582'])
+                                        }
+                                    })
+                                    .then(res => {
+                                            var dataa = res.data.data
+                                            var zh_mem = echarts.getInstanceByDom(document.getElementById("zh_memberinfo_echar"))
+                                            if (zh_mem == null) { // 如果不存在，就进行初始化
+                                                zh_mem = echarts.init(document.getElementById("zh_memberinfo_echar"));
+                                            }
+                                            zh_mem.setOption(dataa,true);
+                                            zhget_data.zh_meminfo_loading=false
+                                            
+                                        })
+                                
+                            })
+               
+                }
+                function zh_handleSizeChange(val) {
+                    console.log(`每页 ${val} 条`)
+                }
+                function zh_handleCurrentChange(val) {
+                    console.log(`当前页: ${val}`)
+                    zh_apiresponse()
+                }
                 function zh_test(){
                     
                 }
@@ -1174,7 +1329,7 @@
                     zhget_data.zh_close_show=false
                 }
                 function zh_echars1(year,Last_month){
-                        
+                        zhget_data.zh_echar_loading=true
                         var zg_data_list={}
                         var zg_member_list=[]
                         axios({
@@ -1187,6 +1342,7 @@
                             if(res.data.data==null){
                                 ElMessage.error('本月没有数据')
                                 zhget_data.zh_month_select=""
+                                zhget_data.zh_echar_loading=false
                                 return
                             }
                             for(var i in res.data.data.kpi){
@@ -1390,7 +1546,7 @@
                                         zh_rank_e = echarts.init(document.getElementById("zh_rank_echars"));
                                     }
                                     zh_rank_e.setOption(zhget_data.zh_rank_echars_data,true);
-                          
+                                    zhget_data.zh_echar_loading=false
                                 })
                                
                             })
@@ -3292,6 +3448,7 @@
                         Last_month = ((Last_month == 0) ? (12) : (Last_month));
                         
                         zh_echars1(year,Last_month)
+                        zh_apiresponse()
                         
                     }
                 }
@@ -3807,7 +3964,11 @@
                     zh_close,
                     getDaysInMonth,
                     zh_echars1,
-                    zh_month_change
+                    zh_month_change,
+                    zh_apiresponse,
+                    zh_handleSizeChange,
+                    zh_handleCurrentChange,
+                    zh_memberinfo
                 }
             }
         }
@@ -4005,6 +4166,190 @@
   background: var(--el-color-danger-light-9);
   color: var(--el-color-danger);
 }
+.success{
+    background-color:#73ff8290;
+    border-radius: 30px;
+    border: none;
+    
+}
+.failuer{
+    background-color:#ff4d4d90;
+    border-radius: 30px;
+    border: none;
+    
+}
+.unstable{
+    background-color:#ff9b4a90;
+    border-radius: 30px;
+    border: none;
+}
+.aborted{
+    background-color:#9c9c9c90;
+    border-radius: 30px;
+    border: none;
+}
+.has-gutter>>>.el-table_9_column_52{
+    padding:0px
+}
+.background{
+  background-color:	#C0C0C020	;
+}
 
+.delaycount1{
+    background-color: #ff3c00;
+    padding-left:15px;
+    /* padding:0px;
+    padding-top:2px;
+    padding-bottom:2px;
+    padding-right:0px; */
+    width:40px;
+    color:#f0f0f0
+}
+.delaycount2{
+    background-color: #ff3c00;
+    padding-left:11px;
+    /* padding:2px;
+    padding-top:2px;
+    padding-bottom:2px;
+    padding-right:0px; */
+    width:40px;
+    color:#f0f0f0
+}
+.delaycount3{
+    background-color: #93c36b;
+    padding-left:15px;
+    /* padding:2px;
+    padding-top:2px;
+    padding-bottom:2px;
+    padding-right:0px; */
+    width:40px;
+    color:#f0f0f0
+}
+.allscore1{
+    background-color: #409EFF;
+    padding-left:15px;
+    /* padding:2px;
+    padding-top:2px;
+    padding-bottom:2px;
+    padding-right:0px; */
+    width:50px;
+    color:#f0f0f0
+}
+.allscore2{
+    background-color: #409EFF;
+    padding-left:10px;
+    /* padding:2px;
+    padding-top:2px;
+    padding-bottom:2px;
+    padding-right:0px; */
+    width:50px;
+    color:#f0f0f0
+}
+.allscore3{
+    background-color: #409EFF;
+    padding-left:9px;
+    /* padding:2px;
+    padding-top:2px;
+    padding-bottom:2px;
+    padding-right:0px; */
+    width:50px;
+    color:#f0f0f0
+}
+.allscore4{
+    background-color: #409EFF;
+    padding-left:4.5px;
+    /* padding:2px;
+    padding-top:2px;
+    padding-bottom:2px;
+    padding-right:0px; */
+    width:50px;
+    color:#f0f0f0
+}
+.yearscore1{
+    background-color: #69b9fa;
+    padding-left:15px;
+    /* padding:2px;
+    padding-top:2px;
+    padding-bottom:2px;
+    padding-right:0px; */
+    width:40px;
+    color:#f0f0f0
+}.yearscore2{
+    background-color: #69b9fa;
+    padding-left:11px;
+    /* padding:2px;
+    padding-top:2px;
+    padding-bottom:2px;
+    padding-right:0px; */
+    width:40px;
+    color:#f0f0f0
+}
+.yearscore3{
+    background-color: #69b9fa;
+    padding-left:8px;
+    /* padding:2px;
+    padding-top:2px;
+    padding-bottom:2px;
+    padding-right:0px; */
+    width:40px;
+    color:#f0f0f0
+}
+.yearscore4{
+    background-color: #69b9fa;
+    padding-left:3.5px;
+    /* padding:2px;
+    padding-top:2px;
+    padding-bottom:2px;
+    padding-right:0px; */
+    width:40px;
+    color:#f0f0f0
+}
+.allcount1{
+    background-color: #93c36b;
+    padding-left:15px;
+    /* padding:2px;
+    padding-top:2px;
+    padding-bottom:2px;
+    padding-right:0px; */
+    width:40px;
+    color:#f0f0f0
+}
+.allcount2{
+    background-color: #93c36b;
+    padding-left:11px;
+    /* padding:2px;
+    padding-top:2px;
+    padding-bottom:2px;
+    padding-right:0px; */
+    width:40px;
+    color:#f0f0f0
+}
+.allcount3{
+    background-color: #93c36b;
+    padding-left:8px;
+    /* padding:2px;
+    padding-top:2px;
+    padding-bottom:2px;
+    padding-right:0px; */
+    width:40px;
+    color:#f0f0f0
+}
+.allcount4{
+    background-color: #93c36b;
+    padding-left:3.5px;
+    /* padding:2px;
+    padding-top:2px;
+    padding-bottom:2px;
+    padding-right:0px; */
+    width:40px;
+    color:#f0f0f0
+}
+/* .el-table{
+    position:static;
+} */
+.block{
+    display: flex;
+    justify-content: center;
+}
     </style>
     
