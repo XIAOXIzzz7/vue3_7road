@@ -1006,13 +1006,20 @@
                                 </el-table-column>
                                 <el-table-column label="所属组" prop="group" min-width="10">
                                 </el-table-column>
-                                <el-table-column label="完成需求总分" sortable prop="all_score" min-width="20">
+                                <el-table-column label="完成需求总分" sortable min-width="20">
+                                    <template #default="scope">
+                                        {{scope.row.all_score}}
+                                    </template>
                                 </el-table-column>
                                 <el-table-column label="完成需求年度分数" sortable prop="year_score" min-width="20">
                                 </el-table-column>
                                 <el-table-column label="完成需求总数" sortable prop="issue_count" min-width="20">
                                 </el-table-column>
                                 <el-table-column label="需求延迟次数" sortable prop="delay_count" min-width="20">
+                                    <template #default="scope">
+                                        <div v-if="parseInt(scope.row.delay_count)==0">{{scope.row.delay_count}}</div>
+                                        <div v-if="parseInt(scope.row.delay_count)>0" style="color:red;">{{scope.row.delay_count}}</div>
+                                    </template>
                                 </el-table-column>
                                 <el-table-column min-width="20">
                                 <template #header>
