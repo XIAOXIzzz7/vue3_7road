@@ -998,7 +998,7 @@
                         <el-card v-loading="zh_echar_loading" element-loading-text="拼命加载中" shadow="hover" style="height:400px;min-height:400px;padding:20px;flex: 0 0 48%;" id="zh_rank_echars"></el-card>
                     </div>
                     <el-divider content-position="left">Personnel statistics</el-divider>
-                        <el-card shadow="hover" style="height:500px;"> 
+                        <el-card shadow="hover" > 
                             <el-table :default-sort="{ prop: 'date', order: 'descending' }" v-loading="zh_loading" element-loading-text="拼命加载中" :data="zh_tableData" style="width: 100%" height="400">
                                 <el-table-column label="id" prop="id" min-width="5">
                                 </el-table-column>
@@ -1006,7 +1006,7 @@
                                 </el-table-column>
                                 <el-table-column label="所属组" prop="group" min-width="10">
                                 </el-table-column>
-                                <el-table-column label="完成需求总分" sortable min-width="20">
+                                <el-table-column label="完成需求总分" sortable prop="all_score" min-width="20">
                                     <template #default="scope">
                                         {{scope.row.all_score}}
                                     </template>
@@ -1015,15 +1015,18 @@
                                 </el-table-column>
                                 <el-table-column label="完成需求总数" sortable prop="issue_count" min-width="20">
                                 </el-table-column>
-                                <el-table-column label="需求延迟次数" sortable prop="delay_count" min-width="20">
+                                <el-table-column label="需求延迟次数" sortable prop="delay_count" min-width="15">
                                     <template #default="scope">
                                         <div v-if="parseInt(scope.row.delay_count)==0">{{scope.row.delay_count}}</div>
                                         <div v-if="parseInt(scope.row.delay_count)>0" style="color:red;">{{scope.row.delay_count}}</div>
                                     </template>
                                 </el-table-column>
-                                <el-table-column min-width="20">
+                                <el-table-column min-width="25">
                                 <template #header>
                                     <div style="display: flex;justify-content: space-between;">
+                                        <div style="margin:10px;">
+                                            <el-switch v-model="zh_switch" @click="zh_switch_click()"/>
+                                        </div>
                                         <el-select v-model="zh_year" @change="zh_apiresponse()" class="m-2" placeholder="Select">
                                             <el-option
                                             v-for="item in zh_year_options"
@@ -1219,6 +1222,10 @@
                                 value:2022,
                                 label: '2022年度'
                             },
+                            {
+                                value:2023,
+                                label: '2023年度'
+                            },
                         ],
                         zh_year:2022,
                         zh_search:"",
@@ -1227,10 +1234,24 @@
                         zh_api_sum:0,
                         zh_echar_loading:true,
                         zh_member_info:false,
-                        zh_meminfo_loading:true
+                        zh_meminfo_loading:true,
+                        zh_switch:false
 
                     }
                 )
+                function zh_switch_click(){
+                    console.log(zhget_data.zh_switch);
+                    if(zhget_data.zh_switch==true){
+                        zhget_data.zh_page=1
+                        zhget_data.zh_page_size=100
+                        zh_apiresponse()
+                    }
+                    else{
+                        zhget_data.zh_page_size=10
+                        zhget_data.zh_page=1
+                        zh_apiresponse()
+                    }
+                }
                 function zh_apiresponse(){
                     zhget_data.zh_loading = true
                     axios({
@@ -1363,6 +1384,7 @@
                             var end_time =""
                             start_time = getDaysInMonth(year,Last_month)[0]
                             end_time = getDaysInMonth(year,Last_month)[(getDaysInMonth(year,Last_month).length)-1]
+                            console.log(start_time, end_time);
                             var kg_issue_data={}
 
                             var kg_bug_data={}
@@ -1378,7 +1400,7 @@
                                 }).then(res => {
                                    
                                     var sdic=Object.keys(res.data.data.score).sort(function(a,b){return res.data.data.score[b]-res.data.data.score[a]});
-                                
+                                    console.log(sdic);
                                     for(var ki in sdic){  
                                         kg_issue_data[sdic[ki]] = res.data.data.score[sdic[ki]]           
                                     }
@@ -2674,6 +2696,7 @@
                    
                     var result = []
                     result.push(all_member_issues_name,all_member_issues_number,sh_issue_count)
+                    console.log(11111,result);
                     return result
                 }
                 function show_false(){
@@ -3975,7 +3998,8 @@
                     zh_apiresponse,
                     zh_handleSizeChange,
                     zh_handleCurrentChange,
-                    zh_memberinfo
+                    zh_memberinfo,
+                    zh_switch_click
                 }
             }
         }
